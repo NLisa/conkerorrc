@@ -1,0 +1,233 @@
+* Credits
+[[https://github.com/sleepomeno/conkerorrc/blob/master/conkerorrc.org][sleepomeno's conkerorrc.org]]
+[[https://github.com/ivoarch/.dot-org-files/blob/master/conkeror.org][ivoarch's conkerorr.org]]
+
+* Org Tangle javascript file
+[[http://emacs.stackexchange.com/questions/13191/emacs-org-babel-how-to-specify-global-tangle-file-for-source-code-export][Stack Exchange Org Tangle Source Question]]
+Using Emacs org-mode babel to tangle the source blocks and create a
+javascript file.
+
+Run C-c C-c on the #+KEYWORD to trigger scanning of the buffer special
+code blocks and updating the information. i.e. once must run it on the
+line with #+PROPERTY: tangle key-word to refresh local setup.
+
+Finally tangle the entire file with C-c C-v t
+
+#+PROPERTY: tangle "~/.conkerorrc/conkerorrc.js"
+Default debugging test to ensure everything
+#+BEGIN_SRC js2
+dumpln("hello, world!");
+#+END_SRC
+* Temporary Kentron Proxy
+#+BEGIN_SRC js2
+// proxy_server_default = "proxy.kentron.co.za";
+// proxy_port_default = 80;
+#+END_SRC
+* Suppress Errors by default
+  kmicu from the IRC #conkeror channel
+#+BEGIN_SRC js2
+user_pref("javascript.options.showInConsole", false);
+user_pref("devtools.errorconsole.deprecation_warnings", false);
+user_pref("datareporting.healthreport.logging.consoleEnabled", false);
+// user_pref("datareporting.healthreport.logging.consoleLevel", "Warn");
+user_pref("datareporting.healthreport.logging.consoleLevel", "Error");
+// user_pref("datareporting.healthreport.logging.dumpLevel", "Debug");
+user_pref("browser.dom.window.dump.enabled", false);
+user_pref("javascript.options.strict", false);
+user_pref("extensions.logging.enabled", false);
+user_pref("services.sync.log.logger.addonutils", "Error");
+user_pref("services.sync.log.logger.engine.addons", "Error");
+#+END_SRC
+* Style and Appearance
+** Theme
+Allow for contrib stuff
+#+BEGIN_SRC js2
+var themes = "~/.conkerorrc/theme";
+load_paths.unshift("chrome://conkeror-contrib/content");
+theme_load_paths.unshift(themes);
+theme_unload("default");
+theme_load("conkeror-theme-zenburn");
+#+END_SRC
+** Open New Buffers in Background, Instead of New Windows
+When opening URLs from GNU Emacs, open them in new buffer.
+And open new buffers in the background
+#+BEGIN_SRC js2
+require ("new-tabs.js");
+require ("clicks-in-new-buffer.js");
+url_remoting_fn = load_url_in_new_buffer;
+define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+#+END_SRC
+** Completion
+Use completion system for - history, bookmarks, webjumps and the
+minibuffer.
+#+BEGIN_SRC js2
+url_completion_use_history = true;
+url_completion_use_bookmarks = true;
+url_completion_use_webjumps = true;
+minibuffer_auto_complete_default = true;
+#+END_SRC
+** Session and History Settings
+Enable auto save session and make it load automatically on startup.
+#+BEGIN_SRC js2
+require("session.js");
+session_auto_save_auto_load = true;
+session_pref('browser.history_expire_days', 60);
+#+END_SRC
+** TODO KeyPass Password Manager Integration
+** Modeline
+*** Widgets
+Disable clock widget, and enable all others
+#+BEGIN_SRC js2
+require("mode-line.js");
+
+remove_hook("mode_line_hook", mode_line_adder(clock_widget));
+
+add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
+add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
+add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
+add_hook("mode_line_hook", mode_line_adder(zoom_widget));
+add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
+#+END_SRC
+*** Favicon
+Activate the favicon widget within the modeline, for displaying
+favicons anywhere
+#+BEGIN_SRC js2
+require("favicon.js");
+add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
+read_buffer_show_icons = true;
+#+END_SRC
+*** Hinting
+Hinting number associated with follow command. Number 0 refers to
+current URL. And hints-quote-next permits entry of number character as
+search refinement text.
+
+| c 0       | copy the current URL                           |
+| C-u f 0   | open background buffer with the current URL    |
+| x 0       | open current document with an external program |
+| C-q "num" | hints-quote-next                               |
+
+Display the URL of a link in hints mode as well as any information
+about the currently selected link.
+Uncomment the line below to enable home-row letters as hint digits
+#+BEGIN_SRC js2
+hints_display_url_panel = true;
+hints_minibuffer_annotation_mode(true);
+// hint_digits="asdfghjkl";
+#+END_SRC
+* Downloads and External Programs
+The following settings are for Handling Downloads, Torrent Files and
+Various Mime Types in Conkeror
+** Downloads
+Set the default download directory and don't use a new window for
+downloads
+#+BEGIN_SRC js2
+cwd = get_home_directory();
+cwd = make_file("/home/nuk3/Downloads");
+download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
+#+END_SRC
+To stop a download buffer from ever opening automatically, uncomment
+the following
+#+BEGIN_SRC js2
+//remove_hook("download_added_hook", open_download_buffer_automatically);
+#+END_SRC
+** External Emacsclient Editor
+Connect to the existing Emacs session when view source code
+#+BEGIN_SRC js2
+// editor_shell_command = "emacsclient -c -a emacs";
+editor_shell_command = "emacsclient -c -a \"\"";
+view_source_use_external_editor = true;
+#+END_SRC
+** Automatically Associate Files Types
+*** Pdf Files
+#+BEGIN_SRC js2
+content_handlers.set("application/pdf", content_handler_open_default_viewer);
+external_content_handlers.set("application/pdf", "evince");
+#+END_SRC
+*** Office Documents
+#+BEGIN_SRC js2
+external_content_handlers.set(
+    "application/vnd.ms-excel",
+    "libreoffice"
+);
+external_content_handlers.set(
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "libreoffice"
+);
+external_content_handlers.set(
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "libreoffice"
+);
+external_content_handlers.set(
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "libreoffice"
+);
+#+END_SRC
+*** TODO Magnet Links and Torrent Files
+#+BEGIN_SRC js2
+//set_protocol_handler("magnet", find_file_in_path("deluge-gtk"));
+//content_handlers.set("application/x-bittorrent", content_handler_open);
+//external_content_handlers.set("application/x-bittorrent", "deluge-gtk");
+content_handlers.set("application/x-bittorrent", content_handler_save);
+#+END_SRC
+*** TODO Emacs mu4e Mail Handler
+#+BEGIN_SRC js2
+set_protocol_handler("mailto", make_file("~/bin/handle-mailto"));
+#+END_SRC
+** User Agent
+This is to try to mitigate Malformed webpages
+#+BEGIN_SRC js2
+//require("user-agent-policy");
+
+//user_agent_policy
+#+END_SRC
+* Extensions
+  - Disable extension compatibility checking.
+  - Allow installation of extensions from any source.
+  - Enable security updates
+#+BEGIN_SRC js2
+session_pref('extensions.checkCompatibility', false);
+session_pref("xpinstall.whitelist.required", false);
+user_pref("extensions.checkUpdateSecurity", true);
+#+END_SRC
+** Firebug
+#+BEGIN_SRC js2
+/*define_variable("firebug_url",
+    "http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js");*/
+define_variable("firebug_url",
+    "http://getfirebug.com/releases/lite/1.4/firebug-lite.js");
+
+function firebug (I) {
+    var doc = I.buffer.document;
+    var script = doc.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('type', firebug_url);
+    script.setAttribute('type', 'firebug.init();');
+    doc.body.appendChild(script);
+}
+interactive("firebug", "open firebug lite", firebug);
+#+END_SRC
+** Https-Everywhere
+#+BEGIN_SRC js2
+if ('@eff.org/https-everywhere;1' in Cc) {
+    interactive("https-everywhere-options-dialog",
+                "Open the HTTPS Everywhere options dialog.",
+                function (I) {
+                    window_watcher.openWindow(
+                        null, "chrome://https-everywhere/content/preferences.xul",
+                        "","chrome,titlebar,toolbar,centerscreen,resizable",null);
+                });
+}
+#+END_SRC
+** Adblock-Plus
+#+BEGIN_SRC js2
+require("adblockplus");
+#+END_SRC
+* Webjumps
+* Keyboard
+* Functions
+
+* Completion of Configuration test
+Do we make it to the end
+#+BEGIN_SRC js2
+dumpln("Parsed Entire File Successfully...");
+#+END_SRC
