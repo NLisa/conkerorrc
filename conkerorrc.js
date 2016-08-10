@@ -1,6 +1,7 @@
 
 dumpln("hello, world!");
 
+// Kenrtron
 // proxy_server_default = "proxy.kentron.co.za";
 // proxy_port_default = 80;
 
@@ -21,6 +22,9 @@ load_paths.unshift("chrome://conkeror-contrib/content");
 theme_load_paths.unshift(themes);
 theme_unload("default");
 theme_load("conkeror-theme-zenburn");
+
+// Learn something new everyday
+homepage = "http://en.wikipedia.org/wiki/Special:Random";
 
 require ("new-tabs.js");
 require ("clicks-in-new-buffer.js");
@@ -52,7 +56,7 @@ read_buffer_show_icons = true;
 
 hints_display_url_panel = true;
 hints_minibuffer_annotation_mode(true);
-// hint_digits="asdfghjkl";
+//hint_digits="asdfghjkl";
 
 cwd = get_home_directory();
 cwd = make_file("/home/nuk3/Downloads");
@@ -63,6 +67,16 @@ download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 // editor_shell_command = "emacsclient -c -a emacs";
 editor_shell_command = "emacsclient -c -a \"\"";
 view_source_use_external_editor = true;
+
+// org-protocol
+function org_capture (url, title, selection, window) {
+    var cmd_str =
+            'emacsclient \"org-protocol:/capture:/w/'+url+'/'+title+'/'+selection+'\"';
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+}
 
 content_handlers.set("application/pdf", content_handler_open_default_viewer);
 external_content_handlers.set("application/pdf", "evince");
@@ -90,18 +104,6 @@ external_content_handlers.set(
 content_handlers.set("application/x-bittorrent", content_handler_save);
 
 set_protocol_handler("mailto", make_file("~/bin/handle-mailto"));
-
-require("user-agent-policy");
-
-user_agent_policy.define_policy("default",
-                                user_agent_firefox(),
-                                "images.google.com",
-                                build_url_regexp($domain = /(.*\.)?google/, $path = /images|search\?tbm=isch/),
-                                "plus.google.com");
-
-user_agent_policy.define_policy("firefoxcompatmode",
-                                "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
-                               "de.eurosport.yahoo.com")
 
 session_pref('extensions.checkCompatibility', false);
 session_pref("xpinstall.whitelist.required", false);
@@ -157,7 +159,7 @@ define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s"
 
 define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-//define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "http://www.google.co.za/");
+define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
@@ -185,7 +187,7 @@ require('eye-guide.js');
 define_key(content_buffer_normal_keymap, "space", "eye-guide-scroll-down");
 define_key(content_buffer_normal_keymap, "back_space", "eye-guide-scroll-up");
 
-interactive("rgc-goto-buffer", "Switches to buffer.",
+interactive("rgc-goto-buffer", "Switches to buffer (tab number)",
             function rgc_switch_to_buffer(I){
                 var buff = yield I.minibuffer.read( $prompt = "Tab number?:");
                 switch_to_buffer(I.window, I.window.buffers.get_buffer(buff-1));
@@ -193,4 +195,91 @@ interactive("rgc-goto-buffer", "Switches to buffer.",
 //define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
 define_key(content_buffer_normal_keymap, "C-x C-b", "rgc-goto-buffer");
 
-dumpln("Parsed Entire File Successfully...");
+add_hook("window_before_close_hook",
+         function () {
+             var w = get_recent_conkeror_window();
+             var result = (w == null) ||
+                     "y" == (yield w.minibuffer.read_single_character_option(
+                         $prompt = "Quit Conkeror? (y/n)",
+                         $options = ["y", "n"]));
+             yield co_return(result);
+         });
+
+var kill_buffer_original = kill_buffer_original || kill_buffer;
+
+var killed_buffer_urls = [];
+
+kill_buffer = function (buffer, force) {
+    if (buffer.display_uri_string) {
+        killed_buffer_urls.push(buffer.display_uri_string);
+    }
+
+    kill_buffer_original(buffer,force);
+};
+
+interactive("restore-killed-buffer-url", "Loads URL from a previously killed buffer",
+            function restore_killed_buffer_url (I) {
+                if (killed_buffer_urls.length !== 0) {
+                    var url = yield I.minibuffer.read(
+                        $prompt = "Restore killed url:",
+                        $completer = new all_word_completer($completions = killed_buffer_urls),
+                        $default_completion = killed_buffer_urls[killed_buffer_urls.length - 1],
+                        $auto_complete = "url",
+                        $auto_compete_initial = true,
+                        $auto_complete_delay = 0,
+                        $require_match = true);
+
+                    load_url_in_new_buffer(url);
+                } else {
+                    I.window.minibuffer.message("No killed buffer urls");
+                }
+            });
+
+function history_clear () {
+    var history = Cc["@mozilla.org/browser/nav-history-service;1"].getService(Ci.nsIBrowserHistory);
+    history.removeAllPages();
+}
+
+interactive("history-clear", "Clear all history",
+            history_clear);
+
+interactive("reload-config", "Reload conkerorrc",
+            function(I) {
+                load_rc();
+                I.window.minibuffer.message("config reloaded");
+            });
+define_key(default_global_keymap, "C-c r", "reload-config");
+
+require("user-agent-policy");
+
+user_agent_policy.define_policy("default",
+                                user_agent_firefox(),
+                                "images.google.com",
+                                build_url_regexp($domain = /(.*\.)?google/, $path = /images|search\?tbm=isch/),
+                                "plus.google.com");
+
+user_agent_policy.define_policy("firefoxcompatmode",
+                                "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
+                               "de.eurosport.yahoo.com")
+
+/*var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
+                    "Gecko/20100101 conkeror/1.0pre",
+                    "chromium": "Mozilla/5.0 (X11; U; Linux x86_64; en-US) " +
+                    "AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63" +
+                    "Safari/534.3",
+                    "firefox": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
+                    "Gecko/20100101 Firefox/8.0.1",
+                    "android": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; " +
+                    "Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like " +
+                    "Gecko) Version/4.0 Mobile Safari/533.1"};
+var agent_completer = prefix_completer($completions = Object.keys(user_agents));
+interactive("user-agent", "Pick a user agent from the list of presets",
+            function(I) {
+                var ua = (yield I.window.minibuffer.read(
+                    $prompt = "Agent:",
+                    $completer = agent_completer));
+                set_user_agent(user_agents[ua]);
+            });
+*/
+
+dumpln("Conkerror.rc Parsed Successfully...");
