@@ -149,7 +149,7 @@ define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alterna
 define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
 define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
 
-define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s" $alternative="https://www.emacswiki.org/");
+define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
 
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 
@@ -157,7 +157,7 @@ define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s"
 
 define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-define_webjump("googleza", "https://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "https://www.google.co.za/");
+//define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "http://www.google.co.za/");
 
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
@@ -173,5 +173,24 @@ var unused_webjumps = ['answers', 'creativecommons', 'lucky', 'yahoo'];
 for (var i=0; i<unused_webjumps.length; i++) {
     delete webjumps[unused_webjumps[i]];
 }
+
+key_bindings_ignore_capslock = true;
+
+undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
+undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
+undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
+undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+
+require('eye-guide.js');
+define_key(content_buffer_normal_keymap, "space", "eye-guide-scroll-down");
+define_key(content_buffer_normal_keymap, "back_space", "eye-guide-scroll-up");
+
+interactive("rgc-goto-buffer", "Switches to buffer.",
+            function rgc_switch_to_buffer(I){
+                var buff = yield I.minibuffer.read( $prompt = "Tab number?:");
+                switch_to_buffer(I.window, I.window.buffers.get_buffer(buff-1));
+            });
+//define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
+define_key(content_buffer_normal_keymap, "C-x C-b", "rgc-goto-buffer");
 
 dumpln("Parsed Entire File Successfully...");

@@ -253,7 +253,7 @@ define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "
 #+END_SRC
 ** Emacs
 #+BEGIN_SRC js2
-define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s" $alternative="https://www.emacswiki.org/");
+define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
 
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 #+END_SRC
@@ -267,7 +267,7 @@ define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 #+END_SRC
 ** Google
 #+BEGIN_SRC js2
-define_webjump("googleza", "https://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "https://www.google.co.za/");
+//define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "http://www.google.co.za/");
 #+END_SRC
 ** Wikipedia
 #+BEGIN_SRC js2
@@ -293,7 +293,34 @@ for (var i=0; i<unused_webjumps.length; i++) {
 }
 #+END_SRC
 * Keyboard
-* Functions
+** Caps Lock
+#+BEGIN_SRC js2
+key_bindings_ignore_capslock = true;
+#+END_SRC
+** Unbind Arrow Keys
+#+BEGIN_SRC js2
+undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
+undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
+undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
+undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+#+END_SRC
+** Eye-Guide Scrolling
+#+BEGIN_SRC js2
+require('eye-guide.js');
+define_key(content_buffer_normal_keymap, "space", "eye-guide-scroll-down");
+define_key(content_buffer_normal_keymap, "back_space", "eye-guide-scroll-up");
+#+END_SRC
+** Conkeror Goto-Buffer
+[[http://puntoblogspot.blogspot.com.es/2013/08/conkeror-go-to-buffer.html][Source]]
+#+BEGIN_SRC js2
+interactive("rgc-goto-buffer", "Switches to buffer.",
+            function rgc_switch_to_buffer(I){
+                var buff = yield I.minibuffer.read( $prompt = "Tab number?:");
+                switch_to_buffer(I.window, I.window.buffers.get_buffer(buff-1));
+            });
+//define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
+define_key(content_buffer_normal_keymap, "C-x C-b", "rgc-goto-buffer");
+#+END_SRC
 * Completion of Configuration test
 Do we make it to the end
 #+BEGIN_SRC js2
