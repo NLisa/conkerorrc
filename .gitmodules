@@ -1,0 +1,3 @@
+[submodule "theme/conkeror-theme-zenburn"]
+	path = theme/conkeror-theme-zenburn
+	url = https://github.com/ivoarch/conkeror-theme-zenburn

@@ -91,9 +91,17 @@ content_handlers.set("application/x-bittorrent", content_handler_save);
 
 set_protocol_handler("mailto", make_file("~/bin/handle-mailto"));
 
-//require("user-agent-policy");
+require("user-agent-policy");
 
-//user_agent_policy
+user_agent_policy.define_policy("default",
+                                user_agent_firefox(),
+                                "images.google.com",
+                                build_url_regexp($domain = /(.*\.)?google/, $path = /images|search\?tbm=isch/),
+                                "plus.google.com");
+
+user_agent_policy.define_policy("firefoxcompatmode",
+                                "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
+                               "de.eurosport.yahoo.com")
 
 session_pref('extensions.checkCompatibility', false);
 session_pref("xpinstall.whitelist.required", false);
@@ -125,5 +133,45 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 }
 
 require("adblockplus");
+
+define_webjump("arch/forums", "http://bbs.archlinux.org");
+define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
+define_webjump("arch/aur", "http://aur.archlinux.org/packages.php?O=0&K=%s");
+define_webjump("arch/packages",
+               "https://www.archlinux.org/packages/?sort=&q=%s&limit=50",
+               $alternative="https://packages.archlinux.org");
+
+define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
+define_webjump("gmane", "http://gmane.org/find.php?list=%s");
+define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
+define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
+define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
+define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
+define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+
+define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s" $alternative="https://www.emacswiki.org/");
+
+define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
+
+define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
+
+define_webjump("ddg", "http://duckduckgo.com/?q=%s");
+
+define_webjump("googleza", "https://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", alternative = "https://www.google.co.za/");
+
+require("page-modes/wikipedia.js");
+//wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
+define_wikipedia_webjumps("en"); // For English
+
+define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
+
+define_webjump("wordpress", "http://wordpress.org/search/%s");
+define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
+
+var unused_webjumps = ['answers', 'creativecommons', 'lucky', 'yahoo'];
+
+for (var i=0; i<unused_webjumps.length; i++) {
+    delete webjumps[unused_webjumps[i]];
+}
 
 dumpln("Parsed Entire File Successfully...");
