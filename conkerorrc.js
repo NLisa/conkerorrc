@@ -31,11 +31,6 @@ require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
 define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
 
-url_completion_use_history = true;
-url_completion_use_bookmarks = true;
-url_completion_use_webjumps = true;
-minibuffer_auto_complete_default = true;
-
 require("session.js");
 session_auto_save_auto_load = true;
 session_pref('browser.history_expire_days', 60);
@@ -45,6 +40,7 @@ require("mode-line.js");
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
 
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
+add_hook("mode_line_hook", mode_line_adder(current_buffer_name_widget), true);
 add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(zoom_widget));
@@ -136,6 +132,33 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 
 require("adblockplus");
 
+url_completion_use_history = false;
+url_completion_use_bookmarks = true;
+url_completion_use_webjumps = true;
+minibuffer_auto_complete_default = true;
+
+define_browser_object_class(
+    "history-url", null,
+    function (I, prompt) {
+        check_buffer (I.buffer, content_buffer);
+        var result = yield I.buffer.window.minibuffer.read_url(
+            $prompt = prompt, $use_webjumps = false, $use_history = true, $use_bookmarks = false);
+        yield co_return (result);
+    });
+
+interactive("find-url-from-history",
+            "Find a page from history in the current buffer",
+            "find-url",
+            $browser_object = browser_object_history_url);
+
+interactive("find-url-from-history-new-buffer",
+            "Find a page from history in a new buffer",
+            "find-url-new-buffer",
+            $browser_object = browser_object_history_url);
+
+define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer");
+define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
+
 define_webjump("arch/forums", "http://bbs.archlinux.org");
 define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
 define_webjump("arch/aur", "http://aur.archlinux.org/packages.php?O=0&K=%s");
@@ -155,11 +178,27 @@ define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternativ
 
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 
+define_webjump("perldoc", "http://perldoc.perl.org/search.html?q=%s");
+define_webjump("cpan", "http://search.cpan.org/search?query=%s&mode=all");
+define_webjump("metacpan", "https://metacpan.org/search?q=%s");
+
+define_webjump("python", "http://docs.python.org/search.html?q=%s");
+define_webjump("python3", "http://docs.python.org/py3k/search.html?q=%s");
+
+define_webjump("ctan/desc", "http://www.ctan.org/search/?search=%s&search_type=description");
+define_webjump("ctan/file", "http://www.ctan.org/search/?search=%s&search_type=filename");
+define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=id");
+define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
+define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
+
 define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
 
 define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
+define_webjump("github", "http://github.com/search?q=%s&type=Everything");
+
+define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
+define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"

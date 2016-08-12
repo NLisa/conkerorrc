@@ -63,15 +63,6 @@ require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
 define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
 #+END_SRC
-** Completion
-Use completion system for - history, bookmarks, webjumps and the
-minibuffer.
-#+BEGIN_SRC js2
-url_completion_use_history = true;
-url_completion_use_bookmarks = true;
-url_completion_use_webjumps = true;
-minibuffer_auto_complete_default = true;
-#+END_SRC
 ** Session and History Settings
 Enable auto save session and make it load automatically on startup.
 #+BEGIN_SRC js2
@@ -88,6 +79,7 @@ require("mode-line.js");
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
 
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
+add_hook("mode_line_hook", mode_line_adder(current_buffer_name_widget), true);
 add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(zoom_widget));
@@ -233,11 +225,50 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 #+BEGIN_SRC js2
 require("adblockplus");
 #+END_SRC
-* Webjumps
+* TODO Webjumps
+
+[[http://conkeror.org/Webjumps][See Conkeror Webjumps List]]
+
 Bookmarks and Smartlinks can be navigated using *g*, for by the short
 string representing the webjump. In addition, SmartLinks can be suffix
 with additional string parameters that are passed to the webjump URL
 string with the *%s*  parameter replaced by the string.
+** URL Completion
+Use completion system for - bookmarks, webjumps and the
+minibuffer. Separate functions to call history url completion
+#+BEGIN_SRC js2
+url_completion_use_history = false;
+url_completion_use_bookmarks = true;
+url_completion_use_webjumps = true;
+minibuffer_auto_complete_default = true;
+#+END_SRC
+Separate history from webjumps and bookmarks. *h* and *H* are used to
+find a URL from history in current buffer and in a new buffer
+respectively.
+#+BEGIN_SRC js2
+define_browser_object_class(
+    "history-url", null,
+    function (I, prompt) {
+        check_buffer (I.buffer, content_buffer);
+        var result = yield I.buffer.window.minibuffer.read_url(
+            $prompt = prompt, $use_webjumps = false, $use_history = true, $use_bookmarks = false);
+        yield co_return (result);
+    });
+
+interactive("find-url-from-history",
+            "Find a page from history in the current buffer",
+            "find-url",
+            $browser_object = browser_object_history_url);
+
+interactive("find-url-from-history-new-buffer",
+            "Find a page from history in a new buffer",
+            "find-url-new-buffer",
+            $browser_object = browser_object_history_url);
+
+define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer");
+define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
+#+END_SRC
+
 ** Arch Linux
 #+BEGIN_SRC js2
 define_webjump("arch/forums", "http://bbs.archlinux.org");
@@ -264,6 +295,28 @@ define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternativ
 
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 #+END_SRC
+** Programming
+*** Bash
+*** Common Lisp
+*** Perl
+#+BEGIN_SRC js2
+define_webjump("perldoc", "http://perldoc.perl.org/search.html?q=%s");
+define_webjump("cpan", "http://search.cpan.org/search?query=%s&mode=all");
+define_webjump("metacpan", "https://metacpan.org/search?q=%s");
+#+END_SRC
+*** Python
+#+BEGIN_SRC js2
+define_webjump("python", "http://docs.python.org/search.html?q=%s");
+define_webjump("python3", "http://docs.python.org/py3k/search.html?q=%s");
+#+END_SRC
+*** LaTeX
+#+BEGIN_SRC js2
+define_webjump("ctan/desc", "http://www.ctan.org/search/?search=%s&search_type=description");
+define_webjump("ctan/file", "http://www.ctan.org/search/?search=%s&search_type=filename");
+define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=id");
+define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
+define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
+#+END_SRC
 ** Distrowatch
 #+BEGIN_SRC js2
 define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
@@ -272,9 +325,14 @@ define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s"
 #+BEGIN_SRC js2
 define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 #+END_SRC
+** Git
+#+BEGIN_SRC js2
+define_webjump("github", "http://github.com/search?q=%s&type=Everything");
+#+END_SRC
 ** Google
 #+BEGIN_SRC js2
-define_webjump("googleza", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
+define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
+define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 #+END_SRC
 ** Wikipedia
 #+BEGIN_SRC js2
