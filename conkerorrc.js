@@ -159,6 +159,17 @@ interactive("find-url-from-history-new-buffer",
 define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer");
 define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
 
+define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
+define_webjump("gmane", "http://gmane.org/find.php?list=%s");
+define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
+define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
+define_webjump("slashdot", "http://slashdot.org/search.pl?query=%s");
+define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
+define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
+define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+
+define_webjump("stackexchange/linux", "http://unix-stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
+
 define_webjump("arch/forums", "http://bbs.archlinux.org");
 define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
 define_webjump("arch/aur", "http://aur.archlinux.org/packages.php?O=0&K=%s");
@@ -166,17 +177,31 @@ define_webjump("arch/packages",
                "https://www.archlinux.org/packages/?sort=&q=%s&limit=50",
                $alternative="https://packages.archlinux.org");
 
-define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
-define_webjump("gmane", "http://gmane.org/find.php?list=%s");
-define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
-define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
-define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
-define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
-define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
 
 define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
-
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
+
+
+
+require("github");
+define_webjump("github", "http://github.com/search?q=%s&type=Everything");
+
+define_webjump("bashfaq", "http://mywiki.wooledge.org/BashFAQ?action=fullsearch&context=180&value=%s&fullsearch=Text",
+               $alternative = "http://mywiki.wooledge.org/BashFAQ");
+define_webjump("cmdlinefu",
+               function(term) {
+                   return 'http://www.commandlinefu.com/commands/matching/' +
+                       term.replace(/[^a-zA-Z0-9_\-]/g, '')
+                       .replace(/[\s\-]+/g, '-') +
+                       '/' + btoa(term);
+               },
+               $alternative = "http://www.commandlinefu.com/");
+
+define_webjump("clhs",
+               "http://www.xach.com/clhs?q=%s",
+               $alternative = "http://www.lispworks.com/documentation/HyperSpec/Front/index.htm");
+define_webjump("cliki", "http://www.cliki.net/admin/search?words=%s");
 
 define_webjump("perldoc", "http://perldoc.perl.org/search.html?q=%s");
 define_webjump("cpan", "http://search.cpan.org/search?query=%s&mode=all");
@@ -191,12 +216,10 @@ define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=i
 define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
 define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
 
-define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
+require("duckduckgo");
+//define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-define_webjump("ddg", "http://duckduckgo.com/?q=%s");
-
-define_webjump("github", "http://github.com/search?q=%s&type=Everything");
-
+//require("google-maps");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 

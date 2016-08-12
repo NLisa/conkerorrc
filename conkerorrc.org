@@ -269,7 +269,23 @@ define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer"
 define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
 #+END_SRC
 
-** Arch Linux
+** General Technical Queries
+Will need to add scopius / journal search entry
+#+BEGIN_SRC js2
+define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
+define_webjump("gmane", "http://gmane.org/find.php?list=%s");
+define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
+define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
+define_webjump("slashdot", "http://slashdot.org/search.pl?query=%s");
+define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
+define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
+define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+#+END_SRC
+** Unix / Linux
+#+BEGIN_SRC js2
+define_webjump("stackexchange/linux", "http://unix-stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
+#+END_SRC
+*** Arch Linux
 #+BEGIN_SRC js2
 define_webjump("arch/forums", "http://bbs.archlinux.org");
 define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
@@ -278,26 +294,54 @@ define_webjump("arch/packages",
                "https://www.archlinux.org/packages/?sort=&q=%s&limit=50",
                $alternative="https://packages.archlinux.org");
 #+END_SRC
-** Technical Queries
-Will need to add scopius / journal search entry
+*** Distrowatch
 #+BEGIN_SRC js2
-define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
-define_webjump("gmane", "http://gmane.org/find.php?list=%s");
-define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
-define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
-define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
-define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
-define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
-#+END_SRC
-** Emacs
-#+BEGIN_SRC js2
-define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
-
-define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
+define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
 #+END_SRC
 ** Programming
+*** Emacs
+#+BEGIN_SRC js2
+define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
+define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
+#+END_SRC
+**** TODO Org-Mode
+#+BEGIN_SRC js2
+
+#+END_SRC
+*** Git
+Use github-mode to install fallthrough bindings for github's keyboard
+shortcuts as well as the following:
+| Binding | Description                |
+|---------+----------------------------|
+| ?       | github-keyboard-shortcuts  |
+| s       | github-focus-site-search   |
+| /       | github-focus-issues-search |
+|         |                            |
+
+#+BEGIN_SRC js2
+require("github");
+define_webjump("github", "http://github.com/search?q=%s&type=Everything");
+#+END_SRC
 *** Bash
+#+BEGIN_SRC js2
+define_webjump("bashfaq", "http://mywiki.wooledge.org/BashFAQ?action=fullsearch&context=180&value=%s&fullsearch=Text",
+               $alternative = "http://mywiki.wooledge.org/BashFAQ");
+define_webjump("cmdlinefu",
+               function(term) {
+                   return 'http://www.commandlinefu.com/commands/matching/' +
+                       term.replace(/[^a-zA-Z0-9_\-]/g, '')
+                       .replace(/[\s\-]+/g, '-') +
+                       '/' + btoa(term);
+               },
+               $alternative = "http://www.commandlinefu.com/");
+#+END_SRC
 *** Common Lisp
+#+BEGIN_SRC js2
+define_webjump("clhs",
+               "http://www.xach.com/clhs?q=%s",
+               $alternative = "http://www.lispworks.com/documentation/HyperSpec/Front/index.htm");
+define_webjump("cliki", "http://www.cliki.net/admin/search?words=%s");
+#+END_SRC
 *** Perl
 #+BEGIN_SRC js2
 define_webjump("perldoc", "http://perldoc.perl.org/search.html?q=%s");
@@ -317,20 +361,29 @@ define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=i
 define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
 define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
 #+END_SRC
-** Distrowatch
+** Search Engine
+*** DuckDuckGo
+Keymap
+| Binding | Description               |
+|---------+---------------------------|
+| down, j | duckduckgo-down           |
+| up, k   | duckduckgo-up             |
+| /       | duckduckgo-focus-search   |
+| r       | duckduckgo-related-topics |
+| m       | duckduckgo-main-results   |
+| !       | duckduckgo-bang-dropdown  |
+| d       | duckduckgo-domain-search  |
+| return  | duckduckgo-follow-current |
+|         |                           |
+
 #+BEGIN_SRC js2
-define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s");
+require("duckduckgo");
+//define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 #+END_SRC
-** DuckDuckGo
+*** Google
 #+BEGIN_SRC js2
-define_webjump("ddg", "http://duckduckgo.com/?q=%s");
-#+END_SRC
-** Git
-#+BEGIN_SRC js2
-define_webjump("github", "http://github.com/search?q=%s&type=Everything");
-#+END_SRC
-** Google
-#+BEGIN_SRC js2
+require("google-maps");
+require("page-modes/google-maps.js");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 #+END_SRC
@@ -339,15 +392,38 @@ define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternati
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
 define_wikipedia_webjumps("en"); // For English
+require("wikipedia-didyoumean.js");
 #+END_SRC
-** Amazon
+** Shopping
+*** Amazon
 #+BEGIN_SRC js2
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 #+END_SRC
-** Art, Video and Multimedia
+** Entertainment & Blogs
+*** xkcd
+#+BEGIN_SRC js
+//require("xkcd");
+#+END_SRC
+*** Youtube
+Conkeror's built-in /media/ browser object class selectable with *e*
+prefix key.
+PlayerMode Keymap
+| Binding | Description             |
+|---------+-------------------------|
+| C-c RET | Play / Pause            |
+| C-c C-m | (Un)-Mute               |
+| C-c C-f | Toggle Fullscreen       |
+| C-c C-[ | Decrease Playback Speed |
+| C-c C-] | Increase Playback Speed |
+This mode should load automatically
+#+BEGIN_SRC js2
+//require("youtube");
+//require("youtube-player");
+define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
+#+END_SRC
+*** Wordpress
 #+BEGIN_SRC js2
 define_webjump("wordpress", "http://wordpress.org/search/%s");
-define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 #+END_SRC
 ** Remove Unused Webjumps
 #+BEGIN_SRC js2
