@@ -226,7 +226,7 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 require("adblockplus");
 #+END_SRC
 * TODO Webjumps
-
+  * NEED TO TEST MODE ACTIVATION *
 [[http://conkeror.org/Webjumps][See Conkeror Webjumps List]]
 
 Bookmarks and Smartlinks can be navigated using *g*, for by the short
@@ -271,6 +271,21 @@ define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
 
 ** General Technical Queries
 Will need to add scopius / journal search entry
+Use *V* to vote on questions on StackExchange, StackOVerflow,
+ServerFault, SuperUser, etc
+
+See reddit mode
+Provides reddit mode cursor
+| Binding | Reddit_Keymap              | Description                                 |
+|---------+----------------------------+---------------------------------------------|
+| j       | reddit-next                | Move cursor to next reddit entry or comment |
+| J       | reddit-next-parent-comment |                                             |
+| k       | reddit-prev                |                                             |
+| K       | reddit-prev-parent-comment |                                             |
+| h       | reddit-open-comments       |                                             |
+| ,       | reddit-vote-up             |                                             |
+| .       | reddit-vote-down           |                                             |
+
 #+BEGIN_SRC js2
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
@@ -319,7 +334,7 @@ shortcuts as well as the following:
 |         |                            |
 
 #+BEGIN_SRC js2
-require("github");
+//require("github");
 define_webjump("github", "http://github.com/search?q=%s&type=Everything");
 #+END_SRC
 *** Bash
@@ -377,13 +392,13 @@ Keymap
 |         |                           |
 
 #+BEGIN_SRC js2
-require("duckduckgo");
+//require("duckduckgo");
 //define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 #+END_SRC
 *** Google
 #+BEGIN_SRC js2
-require("google-maps");
-require("page-modes/google-maps.js");
+//require("google-maps");
+//require("page-modes/google-maps.js");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 #+END_SRC
@@ -392,7 +407,7 @@ define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternati
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
 define_wikipedia_webjumps("en"); // For English
-require("wikipedia-didyoumean.js");
+//require("page-modes/wikipedia-didyoumean.js");
 #+END_SRC
 ** Shopping
 *** Amazon
@@ -402,7 +417,8 @@ define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field
 ** Entertainment & Blogs
 *** xkcd
 #+BEGIN_SRC js
-//require("xkcd");
+require("xkcd");
+xkcd_add_title = true;
 #+END_SRC
 *** Youtube
 Conkeror's built-in /media/ browser object class selectable with *e*

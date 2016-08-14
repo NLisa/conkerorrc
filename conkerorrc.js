@@ -219,18 +219,23 @@ define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", 
 require("duckduckgo");
 //define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-//require("google-maps");
+require("google-maps");
+//require("page-modes/google-maps.js");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
 
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
 define_wikipedia_webjumps("en"); // For English
+//require("page-modes/wikipedia-didyoumean.js");
 
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
-define_webjump("wordpress", "http://wordpress.org/search/%s");
+require("youtube");
+//require("youtube-player");
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
+
+define_webjump("wordpress", "http://wordpress.org/search/%s");
 
 var unused_webjumps = ['answers', 'creativecommons', 'lucky', 'yahoo'];
 
@@ -345,3 +350,6 @@ interactive("user-agent", "Pick a user agent from the list of presets",
 */
 
 dumpln("Conkerror.rc Parsed Successfully...");
+
+require("xkcd");
+xkcd_add_title = true;
