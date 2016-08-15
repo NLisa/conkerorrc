@@ -320,6 +320,7 @@ define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternativ
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 #+END_SRC
 **** TODO Org-Mode
+Also conkeror tips must also be completed
 #+BEGIN_SRC js2
 
 #+END_SRC
@@ -450,7 +451,7 @@ for (var i=0; i<unused_webjumps.length; i++) {
 }
 #+END_SRC
 * Keyboard and Interface
-** Caps Lock
+** Ignore Caps Lock
 #+BEGIN_SRC js2
 key_bindings_ignore_capslock = true;
 #+END_SRC
@@ -541,6 +542,30 @@ interactive("reload-config", "Reload conkerorrc",
                 I.window.minibuffer.message("config reloaded");
             });
 define_key(default_global_keymap, "C-c r", "reload-config");
+#+END_SRC
+** Disable Auto-Focus
+Web designers implement java-script to focus form elements like search
+boxes.
+The following script rigorously goes through web pages as they are
+downloaded and replaces any /"focus"/ method of form elements with a
+dummy function.
+#+BEGIN_SRC js2
+function focusblock (buffer) {
+    var s = Components.utils.Sandbox(buffer.top_frame);
+    s.document = buffer.document.wrappedJSObject;
+    Components.utils.evalInSandbox(
+        "(function () {\
+            function nothing () {}\
+            if (! document.forms)\
+                return;\
+            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
+              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
+                document.forms[i].elements[j].focus = nothing;\
+            }\
+          })();",
+        s);
+}
+add_hook('content_buffer_progress_change_hook', focusblock);
 #+END_SRC
 ** User Agent
 This is to try to mitigate Malformed webpages

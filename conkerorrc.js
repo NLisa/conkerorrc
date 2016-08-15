@@ -184,7 +184,7 @@ define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
 
 
 
-require("github");
+//require("github");
 define_webjump("github", "http://github.com/search?q=%s&type=Everything");
 
 define_webjump("bashfaq", "http://mywiki.wooledge.org/BashFAQ?action=fullsearch&context=180&value=%s&fullsearch=Text",
@@ -216,10 +216,10 @@ define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=i
 define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
 define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
 
-require("duckduckgo");
+//require("duckduckgo");
 //define_webjump("ddg", "http://duckduckgo.com/?q=%s");
 
-require("google-maps");
+//require("google-maps");
 //require("page-modes/google-maps.js");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
 define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
@@ -231,7 +231,7 @@ define_wikipedia_webjumps("en"); // For English
 
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
-require("youtube");
+//require("youtube");
 //require("youtube-player");
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 
@@ -316,6 +316,23 @@ interactive("reload-config", "Reload conkerorrc",
                 I.window.minibuffer.message("config reloaded");
             });
 define_key(default_global_keymap, "C-c r", "reload-config");
+
+function focusblock (buffer) {
+    var s = Components.utils.Sandbox(buffer.top_frame);
+    s.document = buffer.document.wrappedJSObject;
+    Components.utils.evalInSandbox(
+        "(function () {\
+            function nothing () {}\
+            if (! document.forms)\
+                return;\
+            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
+              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
+                document.forms[i].elements[j].focus = nothing;\
+            }\
+          })();",
+        s);
+}
+add_hook('content_buffer_progress_change_hook', focusblock);
 
 require("user-agent-policy");
 
