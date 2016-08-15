@@ -227,7 +227,7 @@ define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternati
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
 define_wikipedia_webjumps("en"); // For English
-//require("page-modes/wikipedia-didyoumean.js");
+//require("wikipedia-didyoumean");
 
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
@@ -244,6 +244,8 @@ for (var i=0; i<unused_webjumps.length; i++) {
 }
 
 key_bindings_ignore_capslock = true;
+
+define_key(content_buffer_normal_keymap, "C-w", "back_space");
 
 undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
 undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
@@ -317,8 +319,11 @@ interactive("reload-config", "Reload conkerorrc",
             });
 define_key(default_global_keymap, "C-c r", "reload-config");
 
+/*
+// Need to confirm variable names and function settings here.
+// i.e. perhaps use I.buffer.document;
 function focusblock (buffer) {
-    var s = Components.utils.Sandbox(buffer.top_frame);
+    var s = Components.utils.Sandbox(buffer.frame);
     s.document = buffer.document.wrappedJSObject;
     Components.utils.evalInSandbox(
         "(function () {\
@@ -333,6 +338,10 @@ function focusblock (buffer) {
         s);
 }
 add_hook('content_buffer_progress_change_hook', focusblock);
+ */
+require("block-content-focus-change.js");
+// If conkeror seems to be blocking focuses from clicks (on slower computers)
+// block_content_focus_change_duration = 40;
 
 require("user-agent-policy");
 

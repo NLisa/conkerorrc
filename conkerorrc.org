@@ -408,7 +408,7 @@ define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternati
 require("page-modes/wikipedia.js");
 //wikipedia_webjumps_format = "wp-%s"; // controls the webjump names. default "wikipedia-%s"
 define_wikipedia_webjumps("en"); // For English
-//require("page-modes/wikipedia-didyoumean.js");
+//require("wikipedia-didyoumean");
 #+END_SRC
 ** Shopping
 *** Amazon
@@ -454,6 +454,10 @@ for (var i=0; i<unused_webjumps.length; i++) {
 ** Ignore Caps Lock
 #+BEGIN_SRC js2
 key_bindings_ignore_capslock = true;
+#+END_SRC
+** Bind C-w to Back-Space
+#+BEGIN_SRC js2
+define_key(content_buffer_normal_keymap, "C-w", "back_space");
 #+END_SRC
 ** Unbind Arrow Keys
 #+BEGIN_SRC js2
@@ -550,8 +554,11 @@ The following script rigorously goes through web pages as they are
 downloaded and replaces any /"focus"/ method of form elements with a
 dummy function.
 #+BEGIN_SRC js2
+/*
+// Need to confirm variable names and function settings here.
+// i.e. perhaps use I.buffer.document;
 function focusblock (buffer) {
-    var s = Components.utils.Sandbox(buffer.top_frame);
+    var s = Components.utils.Sandbox(buffer.frame);
     s.document = buffer.document.wrappedJSObject;
     Components.utils.evalInSandbox(
         "(function () {\
@@ -566,6 +573,10 @@ function focusblock (buffer) {
         s);
 }
 add_hook('content_buffer_progress_change_hook', focusblock);
+ ,*/
+require("block-content-focus-change.js");
+// If conkeror seems to be blocking focuses from clicks (on slower computers)
+// block_content_focus_change_duration = 40;
 #+END_SRC
 ** User Agent
 This is to try to mitigate Malformed webpages
