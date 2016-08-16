@@ -252,6 +252,19 @@ undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
 
+/*
+function define_switch_buffer_key (key, buf_num) {
+    define_key(default_global_keymap, key,
+               function (I) {
+                   switch_to_buffer(I.window,
+                                    I.window.buffers.get_buffer(buf_num));
+               });
+}
+for (let i = 0; i < 10; ++i) {
+    define_switch_buffer_key(String((i+1)%10), i);
+}
+*/
+
 require("client-redirect");
 
 define_client_redirect("google-images",
@@ -348,7 +361,7 @@ function focusblock (buffer) {
 }
 add_hook('content_buffer_progress_change_hook', focusblock);
  */
-require("block-content-focus-change.js");
+//require("block-content-focus-change.js");
 // If conkeror seems to be blocking focuses from clicks (on slower computers)
 // block_content_focus_change_duration = 40;
 
