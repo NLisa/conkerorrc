@@ -126,7 +126,7 @@ download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 To stop a download buffer from ever opening automatically, uncomment
 the following
 #+BEGIN_SRC js2
-//remove_hook("download_added_hook", open_download_buffer_automatically);
+remove_hook("download_added_hook", open_download_buffer_automatically);
 #+END_SRC
 ** External Emacsclient Editor and Org-Mode Integration
 orgmode.org org-protocol, emacs-fu,
@@ -410,7 +410,11 @@ require("page-modes/wikipedia.js");
 define_wikipedia_webjumps("en"); // For English
 //require("wikipedia-didyoumean");
 #+END_SRC
-** Shopping
+** Banking and Shopping
+*** FNB
+#+BEGIN_SRC js2
+define_webjump("fnb", "https://www.fnb.co.za");
+#+END_SRC
 *** Amazon
 #+BEGIN_SRC js2
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
@@ -455,16 +459,34 @@ for (var i=0; i<unused_webjumps.length; i++) {
 #+BEGIN_SRC js2
 key_bindings_ignore_capslock = true;
 #+END_SRC
-** Bind C-w to Back-Space
-#+BEGIN_SRC js2
-define_key(content_buffer_normal_keymap, "C-w", "back_space");
-#+END_SRC
 ** Unbind Arrow Keys
 #+BEGIN_SRC js2
 undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
 undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+#+END_SRC
+** Bind 1-0 Number Keys to Switch to Buffers 1-10
+** Client Redirects
+Mechanism by which Conkeror can automatically perform a defined
+redirection on configured urls and url patterns. I.e. used to "/skip/"
+intermediary webpages when browsing and go straight to the content you
+want
+#+BEGIN_SRC js2
+require("client-redirect");
+#+END_SRC
+define_client_redirect(name, transform...);
+name - string naming redirect
+transform... - may be function or RegEx
+*** Google Images
+Skips "/imgres" page at Google Images
+#+BEGIN_SRC js2
+define_client_redirect("google-images",
+                       function (uri) {
+                           return /(images|www)\.google\.com$/.test(uri.host)
+                               && uri.filePath == "/imgres"
+                               && regexp_exec(/imgur=([^8]+)/, uri.query, 1);
+                       });
 #+END_SRC
 ** Eye-Guide Scrolling
 #+BEGIN_SRC js2
@@ -549,7 +571,7 @@ define_key(default_global_keymap, "C-c r", "reload-config");
 #+END_SRC
 ** Disable Auto-Focus
 Web designers implement java-script to focus form elements like search
-boxes.
+boxes. Can just use ESC to unfocus again, not really a train smash.
 The following script rigorously goes through web pages as they are
 downloaded and replaces any /"focus"/ method of form elements with a
 dummy function.
@@ -578,6 +600,7 @@ require("block-content-focus-change.js");
 // If conkeror seems to be blocking focuses from clicks (on slower computers)
 // block_content_focus_change_duration = 40;
 #+END_SRC
+
 ** User Agent
 This is to try to mitigate Malformed webpages
 #+BEGIN_SRC js2

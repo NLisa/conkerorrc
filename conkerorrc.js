@@ -58,7 +58,7 @@ cwd = get_home_directory();
 cwd = make_file("/home/nuk3/Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 
-//remove_hook("download_added_hook", open_download_buffer_automatically);
+remove_hook("download_added_hook", open_download_buffer_automatically);
 
 // editor_shell_command = "emacsclient -c -a emacs";
 editor_shell_command = "emacsclient -c -a \"\"";
@@ -229,6 +229,8 @@ require("page-modes/wikipedia.js");
 define_wikipedia_webjumps("en"); // For English
 //require("wikipedia-didyoumean");
 
+define_webjump("fnb", "https://www.fnb.co.za");
+
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
 //require("youtube");
@@ -245,12 +247,19 @@ for (var i=0; i<unused_webjumps.length; i++) {
 
 key_bindings_ignore_capslock = true;
 
-define_key(content_buffer_normal_keymap, "C-w", "back_space");
-
 undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
 undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+
+require("client-redirect");
+
+define_client_redirect("google-images",
+                       function (uri) {
+                           return /(images|www)\.google\.com$/.test(uri.host)
+                               && uri.filePath == "/imgres"
+                               && regexp_exec(/imgur=([^8]+)/, uri.query, 1);
+                       });
 
 require('eye-guide.js');
 define_key(content_buffer_normal_keymap, "space", "eye-guide-scroll-down");
