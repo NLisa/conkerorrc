@@ -650,6 +650,34 @@ interactive("user-agent", "Pick a user agent from the list of presets",
             });
 */
 #+END_SRC
+** Reopen Closed Tabs
+#+BEGIN_SRC js2
+var my_closed_buffers = new Array();
+// Save the URL of the current buffer before closing it.
+interactive("my_save_then_kill_buffer",
+            "Push URL of current buffer onto stack before closing it",
+            function(I) {
+                if(my_closed_buffers.length == 10){
+                    my_closed_buffers.shift();
+                    // Only store 10 most recently killed entries
+                }
+                my_closed_buffers.push(I.buffer.document.URL);
+                kill_buffer(I.buffer);
+            });
+// Redefine kill buffer key
+undefine_key(default_global_keymap, "q");
+define_key(default_global_keymap, "q", "my_save_then_kill_buffer");
+interactive("my_re-open_last_killed_buffer",
+            "Pop URL of last killed buffer from stack and open in new buffer.",
+            function(I){
+                if(my_closed_buffers.length > 0){
+                    load_url_in_new_buffer(
+                        my_closed_buffers[my_closed_buffers.length - 1], I.window);
+                    my_closed_buffers.pop();
+                }
+            });
+define_key(default_global_keymap, "Q", "my_re-open_last_kill_buffer");
+#+END_SRC
 * Completion of Configuration test
 Do we make it to the end
 #+BEGIN_SRC js2

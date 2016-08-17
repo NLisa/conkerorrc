@@ -357,30 +357,6 @@ interactive("reload-config", "Reload conkerorrc",
             });
 define_key(default_global_keymap, "C-c r", "reload-config");
 
-/*
-// Need to confirm variable names and function settings here.
-// i.e. perhaps use I.buffer.document;
-function focusblock (buffer) {
-    var s = Components.utils.Sandbox(buffer.frame);
-    s.document = buffer.document.wrappedJSObject;
-    Components.utils.evalInSandbox(
-        "(function () {\
-            function nothing () {}\
-            if (! document.forms)\
-                return;\
-            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
-              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
-                document.forms[i].elements[j].focus = nothing;\
-            }\
-          })();",
-        s);
-}
-add_hook('content_buffer_progress_change_hook', focusblock);
- */
-//require("block-content-focus-change.js");
-// If conkeror seems to be blocking focuses from clicks (on slower computers)
-// block_content_focus_change_duration = 40;
-
 session_pref("general.useragent.compatMode.firefox", true);
 
 require("user-agent-policy");
@@ -414,6 +390,32 @@ interactive("user-agent", "Pick a user agent from the list of presets",
                 set_user_agent(user_agents[ua]);
             });
 */
+
+var my_closed_buffers = new Array();
+// Save the URL of the current buffer before closing it.
+interactive("my_save_then_kill_buffer",
+            "Push URL of current buffer onto stack before closing it",
+            function(I) {
+                if(my_closed_buffers.length == 10){
+                    my_closed_buffers.shift();
+                    // Only store 10 most recently killed entries
+                }
+                my_closed_buffers.push(I.buffer.document.URL);
+                kill_buffer(I.buffer);
+            });
+// Redefine kill buffer key
+undefine_key(default_global_keymap, "q");
+define_key(default_global_keymap, "q", "my_save_then_kill_buffer");
+interactive("my_re-open_last_killed_buffer",
+            "Pop URL of last killed buffer from stack and open in new buffer.",
+            function(I){
+                if(my_closed_buffers.length > 0){
+                    load_url_in_new_buffer(
+                        my_closed_buffers[my_closed_buffers.length - 1], I.window);
+                    my_closed_buffers.pop();
+                }
+            });
+define_key(default_global_keymap, "Q", "my_re-open_last_kill_buffer");
 
 dumpln("Conkerror.rc Parsed Successfully...");
 
