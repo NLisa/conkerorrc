@@ -499,7 +499,15 @@ define_client_redirect("google-images",
                        function (uri) {
                            return /(images|www)\.google\.com$/.test(uri.host)
                                && uri.filePath == "/imgres"
-                               && regexp_exec(/imgur=([^8]+)/, uri.query, 1);
+                               && regexp_exec(/imgurl=([^&]+)/, uri.query, 1);
+                       });
+#+END_SRC
+*** Imgur
+#+BEGIN_SRC js2
+define_client_redirect("imgur",
+                       build_url_regexp($domain = "imgur", $path = /.*/),
+                       function (m) {
+                           return m[0].replace("//", "//i.")+".jpg";
                        });
 #+END_SRC
 ** Eye-Guide Scrolling
