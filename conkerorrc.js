@@ -35,6 +35,9 @@ require("session.js");
 session_auto_save_auto_load = true;
 session_pref('browser.history_expire_days', 60);
 
+// This is the default anyway
+//session_pref("signon.rememberSignons", false);
+
 require("mode-line.js");
 
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
@@ -131,6 +134,15 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 }
 
 require("adblockplus");
+
+require("reddit");
+require("gmail");
+require("feedly");
+require("twitter");
+
+page_mode_deactivate(stackexchange_mode);
+page_mode_deactivate(youtube_mode);
+page_mode_deactivate(youtube_player_mode);
 
 url_completion_use_history = false;
 url_completion_use_bookmarks = true;
@@ -252,7 +264,6 @@ undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
 
-/*
 function define_switch_buffer_key (key, buf_num) {
     define_key(default_global_keymap, key,
                function (I) {
@@ -263,7 +274,6 @@ function define_switch_buffer_key (key, buf_num) {
 for (let i = 0; i < 10; ++i) {
     define_switch_buffer_key(String((i+1)%10), i);
 }
-*/
 
 require("client-redirect");
 
@@ -271,7 +281,13 @@ define_client_redirect("google-images",
                        function (uri) {
                            return /(images|www)\.google\.com$/.test(uri.host)
                                && uri.filePath == "/imgres"
-                               && regexp_exec(/imgur=([^8]+)/, uri.query, 1);
+                               && regexp_exec(/imgurl=([^&]+)/, uri.query, 1);
+                       });
+
+define_client_redirect("imgur",
+                       build_url_regexp($domain = "imgur", $path = /.*/),
+                       function (m) {
+                           return m[0].replace("//", "//i.")+".jpg";
                        });
 
 require('eye-guide.js');
@@ -364,6 +380,8 @@ add_hook('content_buffer_progress_change_hook', focusblock);
 //require("block-content-focus-change.js");
 // If conkeror seems to be blocking focuses from clicks (on slower computers)
 // block_content_focus_change_duration = 40;
+
+session_pref("general.useragent.compatMode.firefox", true);
 
 require("user-agent-policy");
 

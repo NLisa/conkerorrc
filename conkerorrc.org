@@ -41,7 +41,7 @@ user_pref("extensions.logging.enabled", false);
 user_pref("services.sync.log.logger.addonutils", "Error");
 user_pref("services.sync.log.logger.engine.addons", "Error");
 #+END_SRC
-* Style and Appearance
+* Session, Style and Appearance
 ** Theme and Homepage
 Allow for contrib stuff
 #+BEGIN_SRC js2
@@ -69,6 +69,12 @@ Enable auto save session and make it load automatically on startup.
 require("session.js");
 session_auto_save_auto_load = true;
 session_pref('browser.history_expire_days', 60);
+#+END_SRC
+** Disable Password Manager
+Use keypass instead
+#+BEGIN_SRC js2
+// This is the default anyway
+//session_pref("signon.rememberSignons", false);
 #+END_SRC
 ** TODO Modeline
 *** Widgets
@@ -224,6 +230,17 @@ if ('@eff.org/https-everywhere;1' in Cc) {
 ** Adblock-Plus
 #+BEGIN_SRC js2
 require("adblockplus");
+#+END_SRC
+** Page-Modes
+#+BEGIN_SRC js2
+require("reddit");
+require("gmail");
+require("feedly");
+require("twitter");
+
+page_mode_deactivate(stackexchange_mode);
+page_mode_deactivate(youtube_mode);
+page_mode_deactivate(youtube_player_mode);
 #+END_SRC
 * TODO Webjumps
   * NEED TO TEST MODE ACTIVATION *
@@ -468,7 +485,6 @@ undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
 #+END_SRC
 ** Bind 1-0 Number Keys to Switch to Buffers 1-10
 #+BEGIN_SRC js2
-/*
 function define_switch_buffer_key (key, buf_num) {
     define_key(default_global_keymap, key,
                function (I) {
@@ -479,7 +495,6 @@ function define_switch_buffer_key (key, buf_num) {
 for (let i = 0; i < 10; ++i) {
     define_switch_buffer_key(String((i+1)%10), i);
 }
-*/
 #+END_SRC
 ** Client Redirects
 Mechanism by which Conkeror can automatically perform a defined
