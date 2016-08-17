@@ -623,6 +623,13 @@ add_hook('content_buffer_progress_change_hook', focusblock);
 // block_content_focus_change_duration = 40;
 #+END_SRC
 ** User Agent
+User-agent is a string of text that browsers use to identify
+themselves to websites when making request.
+*** Firefox Compat Mode
+#+BEGIN_SRC js2
+session_pref("general.useragent.compatMode.firefox", true);
+#+END_SRC
+*** Per-Site User-Agent-Policy
 This is to try to mitigate Malformed webpages
 #+BEGIN_SRC js2
 require("user-agent-policy");
