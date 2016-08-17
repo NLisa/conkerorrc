@@ -242,7 +242,7 @@ page_mode_deactivate(stackexchange_mode);
 page_mode_deactivate(youtube_mode);
 page_mode_deactivate(youtube_player_mode);
 #+END_SRC
-* TODO Webjumps
+* BUSY Webjumps
   * NEED TO TEST MODE ACTIVATION *
 [[http://conkeror.org/Webjumps][See Conkeror Webjumps List]]
 
@@ -605,37 +605,6 @@ interactive("reload-config", "Reload conkerorrc",
                 I.window.minibuffer.message("config reloaded");
             });
 define_key(default_global_keymap, "C-c r", "reload-config");
-#+END_SRC
-** Disable Auto-Focus
-Web designers implement java-script to focus form elements like search
-boxes. Can just use ESC to unfocus again, not really a train smash.
-The following script rigorously goes through web pages as they are
-downloaded and replaces any /"focus"/ method of form elements with a
-dummy function.
-#+BEGIN_SRC js2
-/*
-// Need to confirm variable names and function settings here.
-// i.e. perhaps use I.buffer.document;
-function focusblock (buffer) {
-    var s = Components.utils.Sandbox(buffer.frame);
-    s.document = buffer.document.wrappedJSObject;
-    Components.utils.evalInSandbox(
-        "(function () {\
-            function nothing () {}\
-            if (! document.forms)\
-                return;\
-            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
-              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
-                document.forms[i].elements[j].focus = nothing;\
-            }\
-          })();",
-        s);
-}
-add_hook('content_buffer_progress_change_hook', focusblock);
- ,*/
-//require("block-content-focus-change.js");
-// If conkeror seems to be blocking focuses from clicks (on slower computers)
-// block_content_focus_change_duration = 40;
 #+END_SRC
 ** User Agent
 User-agent is a string of text that browsers use to identify
