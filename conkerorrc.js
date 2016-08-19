@@ -70,12 +70,89 @@ view_source_use_external_editor = true;
 // org-protocol
 function org_capture (url, title, selection, window) {
     var cmd_str =
-            'emacsclient \"org-protocol:/capture:/w/'+url+'/'+title+'/'+selection+'\"';
+            'emacsclient \"org-protocol:/capture://'+url+'/'+title+'/'+selection+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
 }
+function org_capture_journal (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/j/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_kaizen (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/k/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_emacs (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/e/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_devenv (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/d/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_code (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/p/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_course (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/c/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+function org_capture_monopoly (url, title, selection, window) {
+    var cmd_str = 'emacsclient \"org-protocol:/capture:/m/'+url+'/'+title+'\"';
+    org_capture(url,title,selection,window,cmd_str);
+}
+interactive("org_capture_journal", "Journal",
+            function (I) {
+                org_capture_journal(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_kaizen", "Kaizen - Self Enlightenment",
+            function (I) {
+                org_capture_kaizen(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_emacs", "Emacs",
+            function (I) {
+                org_capture_emacs(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_devenv", "Development Environment",
+            function (I) {
+                org_capture_devenv(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_code", "Programming and Code",
+            function (I) {
+                org_capture_code(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_course", "Chow Course",
+            function (I) {
+                org_capture_course(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org_capture_monopoly", "Monopolize the 1%",
+            function (I) {
+                org_capture_monopoly(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
 
 content_handlers.set("application/pdf", content_handler_open_default_viewer);
 external_content_handlers.set("application/pdf", "evince");
@@ -140,10 +217,6 @@ require("gmail");
 require("feedly");
 require("twitter");
 
-page_mode_deactivate(stackexchange_mode);
-page_mode_deactivate(youtube_mode);
-page_mode_deactivate(youtube_player_mode);
-
 url_completion_use_history = false;
 url_completion_use_bookmarks = true;
 url_completion_use_webjumps = true;
@@ -174,11 +247,12 @@ define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
 define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
-define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
 define_webjump("slashdot", "http://slashdot.org/search.pl?query=%s");
 define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
 define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
 define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+
+define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
 
 define_webjump("stackexchange/linux", "http://unix-stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
 
@@ -228,9 +302,6 @@ define_webjump("ctan/pack", "http://www.ctan.org/search/?search=%s&search_type=i
 define_webjump("ctan", "http://www.ctan.org/search/?search=%s&search_type=description&search_type=filename&search_type=id");
 define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", $alternative="http://tex.stackexchange.com");
 
-//require("duckduckgo");
-//define_webjump("ddg", "http://duckduckgo.com/?q=%s");
-
 //require("google-maps");
 //require("page-modes/google-maps.js");
 define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
@@ -245,8 +316,6 @@ define_webjump("fnb", "https://www.fnb.co.za");
 
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
-//require("youtube");
-//require("youtube-player");
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 
 define_webjump("wordpress", "http://wordpress.org/search/%s");
@@ -391,31 +460,39 @@ interactive("user-agent", "Pick a user agent from the list of presets",
             });
 */
 
-var my_closed_buffers = new Array();
+var my_killed_buffers = new Array();
 // Save the URL of the current buffer before closing it.
-interactive("my_save_then_kill_buffer",
+interactive("my_save_url_then_kill_buffer",
             "Push URL of current buffer onto stack before closing it",
             function(I) {
-                if(my_closed_buffers.length == 10){
-                    my_closed_buffers.shift();
+                if(my_killed_buffers.length == 10){
+                    my_killed_buffers.shift();
                     // Only store 10 most recently killed entries
                 }
-                my_closed_buffers.push(I.buffer.document.URL);
+                my_killed_buffers.push(I.buffer.document.URL);
                 kill_buffer(I.buffer);
             });
 // Redefine kill buffer key
 undefine_key(default_global_keymap, "q");
-define_key(default_global_keymap, "q", "my_save_then_kill_buffer");
-interactive("my_re-open_last_killed_buffer",
+define_key(default_global_keymap, "q", "my_save_url_then_kill_buffer");
+interactive("my_restore_last_killed_buffer",
             "Pop URL of last killed buffer from stack and open in new buffer.",
             function(I){
-                if(my_closed_buffers.length > 0){
+                if(my_killed_buffers.length > 0){
                     load_url_in_new_buffer(
-                        my_closed_buffers[my_closed_buffers.length - 1], I.window);
-                    my_closed_buffers.pop();
+                        my_killed_buffers[my_killed_buffers.length - 1], I.window);
+                    my_killed_buffers.pop();
                 }
             });
-define_key(default_global_keymap, "Q", "my_re-open_last_kill_buffer");
+define_key(default_global_keymap, "Q", "my_restore_last_killed_buffer");
+
+define_key(content_buffer_normal_keymap, "C-c c j", "org_capture_journal");
+define_key(content_buffer_normal_keymap, "C-c c k", "org_capture_kaizen");
+define_key(content_buffer_normal_keymap, "C-c c e", "org_capture_emacs");
+define_key(content_buffer_normal_keymap, "C-c c d", "org_capture_devenv");
+define_key(content_buffer_normal_keymap, "C-c c p", "org_capture_code");
+define_key(content_buffer_normal_keymap, "C-c c c", "org_capture_course");
+define_key(content_buffer_normal_keymap, "C-c c m", "org_capture_monopoly");
 
 dumpln("Conkerror.rc Parsed Successfully...");
 
