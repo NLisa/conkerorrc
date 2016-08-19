@@ -78,75 +78,108 @@ function org_capture (url, title, selection, window) {
 }
 function org_capture_journal (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/j/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
 }
 function org_capture_kaizen (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/k/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
 }
 function org_capture_emacs (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/e/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+
 }
 function org_capture_devenv (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/d/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+
 }
 function org_capture_code (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/p/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+
 }
 function org_capture_course (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/c/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+
 }
 function org_capture_monopoly (url, title, selection, window) {
     var cmd_str = 'emacsclient \"org-protocol:/capture:/m/'+url+'/'+title+'\"';
-    org_capture(url,title,selection,window,cmd_str);
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+
 }
-interactive("org_capture_journal", "Journal",
+interactive("org-capture", "Clip URL, title and selection to capture via org-protocol",
+            function (I) {
+                org_capture(encodeURIComponent(I.buffer.display_url_string),
+                                 encodeURIComponent(I.buffer.document.title),
+                                 encodeURIComponent(I.buffer.top_frame.getSelection()),
+                                 I.window);
+            });
+interactive("org-capture-journal", "Journal",
             function (I) {
                 org_capture_journal(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_kaizen", "Kaizen - Self Enlightenment",
+interactive("org-capture-kaizen", "Kaizen - Self Enlightenment",
             function (I) {
                 org_capture_kaizen(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_emacs", "Emacs",
+interactive("org-capture-emacs", "Emacs",
             function (I) {
                 org_capture_emacs(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_devenv", "Development Environment",
+interactive("org-capture-devenv", "Development Environment",
             function (I) {
                 org_capture_devenv(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_code", "Programming and Code",
+interactive("org-capture-code", "Programming and Code",
             function (I) {
                 org_capture_code(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_course", "Chow Course",
+interactive("org-capture-course", "Chow Course",
             function (I) {
                 org_capture_course(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-interactive("org_capture_monopoly", "Monopolize the 1%",
+interactive("org-capture-monopoly", "Monopolize the 1%",
             function (I) {
                 org_capture_monopoly(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
@@ -486,13 +519,14 @@ interactive("my_restore_last_killed_buffer",
             });
 define_key(default_global_keymap, "Q", "my_restore_last_killed_buffer");
 
-define_key(content_buffer_normal_keymap, "C-c c j", "org_capture_journal");
-define_key(content_buffer_normal_keymap, "C-c c k", "org_capture_kaizen");
-define_key(content_buffer_normal_keymap, "C-c c e", "org_capture_emacs");
-define_key(content_buffer_normal_keymap, "C-c c d", "org_capture_devenv");
-define_key(content_buffer_normal_keymap, "C-c c p", "org_capture_code");
-define_key(content_buffer_normal_keymap, "C-c c c", "org_capture_course");
-define_key(content_buffer_normal_keymap, "C-c c m", "org_capture_monopoly");
+define_key(content_buffer_normal_keymap, "C-c c t", "org-capture");
+define_key(content_buffer_normal_keymap, "C-c c j", "org-capture-journal");
+define_key(content_buffer_normal_keymap, "C-c c k", "org-capture-kaizen");
+define_key(content_buffer_normal_keymap, "C-c c e", "org-capture-emacs");
+define_key(content_buffer_normal_keymap, "C-c c d", "org-capture-devenv");
+define_key(content_buffer_normal_keymap, "C-c c p", "org-capture-code");
+define_key(content_buffer_normal_keymap, "C-c c c", "org-capture-course");
+define_key(content_buffer_normal_keymap, "C-c c m", "org-capture-monopoly");
 
 dumpln("Conkerror.rc Parsed Successfully...");
 
