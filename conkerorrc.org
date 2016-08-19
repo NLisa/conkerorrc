@@ -145,7 +145,6 @@ editor_shell_command = "emacsclient -c -a \"\"";
 view_source_use_external_editor = true;
 
 // org-protocol
-/*
 function org_capture (url, title, selection, window) {
     var cmd_str =
             'emacsclient \"org-protocol://capture://'+url+'/'+title+'/'+selection+'\"';
@@ -154,31 +153,30 @@ function org_capture (url, title, selection, window) {
     }
     shell_command_blind(cmd_str);
 }
-,*/
 function org_store_link (url, title, window) {
     var cmd_str =
-            'emacsclient \"org-protocol://store-link://'+url+'/'+title+'\"';
+            'emacsclient \"org-protocol:/store-link:/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
 }
 function org_capture_journal (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/j/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/j/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
 }
 function org_capture_kaizen (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/k/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/k/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
 }
 function org_capture_emacs (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/e/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/e/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -186,7 +184,7 @@ function org_capture_emacs (url, title, selection, window) {
 
 }
 function org_capture_devenv (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/d/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/d/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -194,7 +192,7 @@ function org_capture_devenv (url, title, selection, window) {
 
 }
 function org_capture_code (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/p/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/p/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -202,7 +200,7 @@ function org_capture_code (url, title, selection, window) {
 
 }
 function org_capture_course (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/c/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/c/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -210,14 +208,13 @@ function org_capture_course (url, title, selection, window) {
 
 }
 function org_capture_monopoly (url, title, selection, window) {
-    var cmd_str = 'emacsclient \"org-protocol:/capture:/m/'+url+'/'+title+'\"';
+    var cmd_str = 'emacsclient \"org-protocol://capture:/m/'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
 
 }
-/*
 interactive("org-capture", "Clip URL, title and selection to capture via org-protocol",
             function (I) {
                 org_capture(encodeURIComponent(I.buffer.display_url_string),
@@ -225,7 +222,6 @@ interactive("org-capture", "Clip URL, title and selection to capture via org-pro
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-,*/
 interactive("org-store-link", "Stores [[url][title]] as org link and copies url to emacs kill ring",
             function (I) {
                 org_store_link(encodeURIComponent(I.buffer.display_url_string),
