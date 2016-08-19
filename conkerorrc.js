@@ -68,9 +68,19 @@ editor_shell_command = "emacsclient -c -a \"\"";
 view_source_use_external_editor = true;
 
 // org-protocol
+/*
 function org_capture (url, title, selection, window) {
     var cmd_str =
-            'emacsclient \"org-protocol:/capture://'+url+'/'+title+'/'+selection+'\"';
+            'emacsclient \"org-protocol://capture://'+url+'/'+title+'/'+selection+'\"';
+    if (window != null) {
+        window.minibuffer.message('Issuing ' + cmd_str);
+    }
+    shell_command_blind(cmd_str);
+}
+*/
+function org_store_link (url, title, window) {
+    var cmd_str =
+            'emacsclient \"org-protocol://store-link://'+url+'/'+title+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -130,12 +140,20 @@ function org_capture_monopoly (url, title, selection, window) {
     shell_command_blind(cmd_str);
 
 }
+/*
 interactive("org-capture", "Clip URL, title and selection to capture via org-protocol",
             function (I) {
                 org_capture(encodeURIComponent(I.buffer.display_url_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
+            });
+*/
+interactive("org-store-link", "Stores [[url][title]] as org link and copies url to emacs kill ring",
+            function (I) {
+                org_store_link(encodeURIComponent(I.buffer.display_url_string),
+                               encodeURIComponent(I.buffer.document.title),
+                               I.window);
             });
 interactive("org-capture-journal", "Journal",
             function (I) {
@@ -520,6 +538,7 @@ interactive("my_restore_last_killed_buffer",
 define_key(default_global_keymap, "Q", "my_restore_last_killed_buffer");
 
 define_key(content_buffer_normal_keymap, "C-c c t", "org-capture");
+define_key(content_buffer_normal_keymap, "C-c c l", "org-store-link");
 define_key(content_buffer_normal_keymap, "C-c c j", "org-capture-journal");
 define_key(content_buffer_normal_keymap, "C-c c k", "org-capture-kaizen");
 define_key(content_buffer_normal_keymap, "C-c c e", "org-capture-emacs");
