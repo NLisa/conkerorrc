@@ -29,7 +29,9 @@ homepage = "http://en.wikipedia.org/wiki/Special:Random";
 require ("new-tabs.js");
 require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
-define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+undefine_key(content_buffer_normal_keymap, "l", "back");
+define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
 
 require("session.js");
 session_auto_save_auto_load = true;
@@ -334,8 +336,6 @@ define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s"
 
 define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
-
-
 
 //require("github");
 define_webjump("github", "http://github.com/search?q=%s&type=Everything");

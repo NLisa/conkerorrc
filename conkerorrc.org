@@ -61,7 +61,9 @@ And open new buffers in the background
 require ("new-tabs.js");
 require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
-define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+undefine_key(content_buffer_normal_keymap, "l", "back");
+define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
 #+END_SRC
 ** Session and History Settings
 Enable auto save session and make it load automatically on startup.
@@ -76,7 +78,7 @@ Use keypass instead
 // This is the default anyway
 //session_pref("signon.rememberSignons", false);
 #+END_SRC
-** TODO Modeline
+** BUSY Modeline
 *** Widgets
 Disable clock widget, and enable all others
 #+BEGIN_SRC js2
@@ -386,7 +388,7 @@ interactive("sqlite-manager",
                 make_chrome_window('chrome://SQLiteManager/content/sqlitemanager.xul');
             });
 #+END_SRC
-* BUSY Webjumps
+* Webjumps
   * NEED TO TEST MODE ACTIVATION *
 [[http://conkeror.org/Webjumps][See Conkeror Webjumps List]]
 
@@ -484,11 +486,6 @@ define_webjump("distrowatch", "http://distrowatch.com/table.php?distribution=%s"
 #+BEGIN_SRC js2
 define_webjump("emacswiki", "https://www.emacswiki.org/search?q=%s", $alternative="https://www.emacswiki.org/");
 define_webjump("marmalade", "http://marmalade-repo.org/packages?q=%s");
-#+END_SRC
-**** TODO Org-Mode
-Also conkeror tips must also be completed
-#+BEGIN_SRC js2
-
 #+END_SRC
 *** Git
 Use github-mode to install fallthrough bindings for github's keyboard
@@ -758,7 +755,7 @@ user_agent_policy.define_policy("firefoxcompatmode",
                                 "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
                                "de.eurosport.yahoo.com")
 #+END_SRC
-*** TODO [#C] User Agent Switcher                 :emacs:conkeror:user-agent:
+*** [#C] User Agent Switcher                 :emacs:conkeror:user-agent:
 #+BEGIN_SRC js2
 /*var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                     "Gecko/20100101 conkeror/1.0pre",
