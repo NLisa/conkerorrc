@@ -70,7 +70,7 @@ view_source_use_external_editor = true;
 // org-protocol
 function org_capture (url, title, selection, window) {
     var cmd_str =
-            'emacsclient \"org-protocol://capture://'+url+'/'+title+'/'+selection+'\"';
+            'emacsclient \"org-protocol://capture:/w/'+url+'/'+title+'/'+selection+'\"';
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
@@ -290,6 +290,8 @@ interactive("find-url-from-history-new-buffer",
 
 define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer");
 define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
+
+read_url_handler_list = [read_url_make_default_webjump_handler("duckduckgo")];
 
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
@@ -533,7 +535,7 @@ interactive("my_restore_last_killed_buffer",
             });
 define_key(default_global_keymap, "Q", "my_restore_last_killed_buffer");
 
-define_key(content_buffer_normal_keymap, "C-c c t", "org-capture");
+define_key(content_buffer_normal_keymap, "C-c c w", "org-capture");
 define_key(content_buffer_normal_keymap, "C-c c l", "org-store-link");
 define_key(content_buffer_normal_keymap, "C-c c j", "org-capture-journal");
 define_key(content_buffer_normal_keymap, "C-c c k", "org-capture-kaizen");
