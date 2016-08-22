@@ -118,6 +118,14 @@ hints_minibuffer_annotation_mode(true);
 //hint_digits="asdfghjkl";
 #+END_SRC
 *** TODO [#C] Nyan Cat in Modeline                  :emacs:conkeror:nyan:cat:
+** Default Zoom Level
+#+BEGIN_SRC js2
+function my_zoom_set (buffer) {
+    browser_zoom_set(buffer, true, 150);
+    browser_zoom_set(buffer, false, 100);
+}
+add_hook('create_buffer_late_hook', my_zoom_set);
+#+END_SRC
 * Downloads and External Programs
 The following settings are for Handling Downloads, Torrent Files and
 Various Mime Types in Conkeror
@@ -662,7 +670,7 @@ interactive("switch-to-recent-buffer",
                                     I.buffer))));
             });
 define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
-define_key(content_buffer_normal_keymap, "C-x C-b", "switch_to_buffer");
+define_key(content_buffer_normal_keymap, "C-x C-b", "switch-to-recent-buffer");
 #+END_SRC
 ** Confirm Quit / Kill Window
 #+BEGIN_SRC js2

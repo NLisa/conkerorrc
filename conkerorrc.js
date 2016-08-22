@@ -57,6 +57,12 @@ hints_display_url_panel = true;
 hints_minibuffer_annotation_mode(true);
 //hint_digits="asdfghjkl";
 
+function my_zoom_set (buffer) {
+    browser_zoom_set(buffer, true, 150);
+    browser_zoom_set(buffer, false, 100);
+}
+add_hook('create_buffer_late_hook', my_zoom_set);
+
 cwd = get_home_directory();
 cwd = make_file("/home/nuk3/Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
@@ -442,7 +448,7 @@ interactive("switch-to-recent-buffer",
                                     I.buffer))));
             });
 define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
-define_key(content_buffer_normal_keymap, "C-x C-b", "switch_to_buffer");
+define_key(content_buffer_normal_keymap, "C-x C-b", "switch-to-recent-buffer");
 
 add_hook("window_before_close_hook",
          function () {
