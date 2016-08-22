@@ -145,13 +145,19 @@ editor_shell_command = "emacsclient -c -a \"\"";
 view_source_use_external_editor = true;
 
 // org-protocol
-function org_capture (url, title, selection, window) {
-    var cmd_str =
-            'emacsclient \"org-protocol://capture:/w/'+url+'/'+title+'/'+selection+'\"';
+
+// simplified, neater wrapper function
+
+function org_capture_wrapper (url, title, selection, window, cmd_str) {
     if (window != null) {
         window.minibuffer.message('Issuing ' + cmd_str);
     }
     shell_command_blind(cmd_str);
+}
+function org_capture (url, title, selection, window) {
+    var cmd_str =
+            'emacsclient \"org-protocol://capture:/w/'+url+'/'+title+'/'+selection+'\"';
+    org_capture_wrapper(url,title,selection,window,cmd_str);
 }
 function org_store_link (url, title, window) {
     var cmd_str =
@@ -793,6 +799,14 @@ define_key(content_buffer_normal_keymap, "C-c c d", "org-capture-devenv");
 define_key(content_buffer_normal_keymap, "C-c c p", "org-capture-code");
 define_key(content_buffer_normal_keymap, "C-c c c", "org-capture-course");
 define_key(content_buffer_normal_keymap, "C-c c m", "org-capture-monopoly");
+#+END_SRC
+** Duplicate Buffers
+#+BEGIN_SRC js2
+interactive("duplicate-buffer", "Duplicate buffer",
+            function (I) {
+                browser_object_follow(I.buffer, OPEN_NEW_BUFFER, I.buffer.current_uri.spec);
+            });
+define_key(content_buffer_normal_keymap, "M-D", "duplicate-buffer");
 #+END_SRC
 * Completion of Configuration test
 Do we make it to the end
