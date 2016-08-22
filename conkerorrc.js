@@ -429,8 +429,20 @@ interactive("rgc-goto-buffer", "Switches to buffer (tab number)",
                 var buff = yield I.minibuffer.read( $prompt = "Tab number?:");
                 switch_to_buffer(I.window, I.window.buffers.get_buffer(buff-1));
             });
-//define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
-define_key(content_buffer_normal_keymap, "C-x C-b", "rgc-goto-buffer");
+interactive("switch-to-recent-buffer",
+            "Prompt for a buffer and switch to it, displaying the list in last-visited order.",
+            function (I) {
+                switch_to_buffer(
+                    I.window,
+                    (yield I.minibuffer.read_buffer(
+                        $prompt = "Switch to buffer:",
+                        $buffers = I.window.buffers.buffer_history,
+                        $default = (I.window.buffers.count > 1 ?
+                                    I.window.buffers.buffer_history[1] :
+                                    I.buffer))));
+            });
+define_key(content_buffer_normal_keymap, "M-g M-g", "rgc-goto-buffer");
+define_key(content_buffer_normal_keymap, "C-x C-b", "switch_to_buffer");
 
 add_hook("window_before_close_hook",
          function () {
@@ -562,6 +574,29 @@ interactive("duplicate-buffer", "Duplicate buffer",
                 browser_object_follow(I.buffer, OPEN_NEW_BUFFER, I.buffer.current_uri.spec);
             });
 define_key(content_buffer_normal_keymap, "M-D", "duplicate-buffer");
+
+function create_selection_search(webjump, key) {
+    interactive(webjump+"-selection-search",
+                "Search " + webjump + " with selection contents",
+                "find-url-new-buffer",
+                $browser_object = function (I) {
+                    return webjump + " " + I.buffer.top_frame.getSelection();}
+               );
+    interactive("prompted-"+webjump+"-search", null,
+                function (I) {
+                    var term = yield I.minibuffer.read_url($prompt = "Search "+webjump+":",
+                                                           $initial_value = webjump+" ",
+                                                           $select = false);
+                    browser_object_follow(I.buffer, FOLLOW_DEFAULT, term);
+                });
+    define_key(content_buffer_normal_keymap, key.toUpperCase(), webjump + "-selection-search");
+    define_key(content_buffer_normal_keymap, key, "prompted-" + webjump + "-search");
+}
+create_selection_search("google", "o");
+create_selection_search("wikipedia", "w");
+create_selection_search("duckduckgo", "d");
+create_selection_search("amazon", "a");
+create_selection_search("youtube", "y");
 
 dumpln("Conkerror.rc Parsed Successfully...");
 
