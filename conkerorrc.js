@@ -29,9 +29,6 @@ homepage = "http://en.wikipedia.org/wiki/Special:Random";
 require ("new-tabs.js");
 require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
-//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
-undefine_key(content_buffer_normal_keymap, "l", "back");
-define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
 
 require("session.js");
 session_auto_save_auto_load = true;
@@ -66,7 +63,8 @@ function my_zoom_set (buffer) {
 add_hook('create_buffer_late_hook', my_zoom_set);
 
 cwd = get_home_directory();
-cwd = make_file("/home/nuk3/Downloads");
+cwd.append("Downloads");
+//cwd = make_file("/home/nuk3/Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 
 remove_hook("download_added_hook", open_download_buffer_automatically);
@@ -399,6 +397,12 @@ undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
 undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+
+//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+undefine_key(content_buffer_normal_keymap, "l", "back");
+define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
+define_key(content_buffer_normal_keymap, "M-f", "buffer-next");
+define_key(content_buffer_normal_keymap, "M-b", "buffer-previous");
 
 function define_switch_buffer_key (key, buf_num) {
     define_key(default_global_keymap, key,

@@ -61,9 +61,6 @@ And open new buffers in the background
 require ("new-tabs.js");
 require ("clicks-in-new-buffer.js");
 url_remoting_fn = load_url_in_new_buffer;
-//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
-undefine_key(content_buffer_normal_keymap, "l", "back");
-define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
 #+END_SRC
 ** Session and History Settings
 Enable auto save session and make it load automatically on startup.
@@ -136,7 +133,8 @@ Set the default download directory and don't use a new window for
 downloads
 #+BEGIN_SRC js2
 cwd = get_home_directory();
-cwd = make_file("/home/nuk3/Downloads");
+cwd.append("Downloads");
+//cwd = make_file("/home/nuk3/Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 #+END_SRC
 To stop a download buffer from ever opening automatically, uncomment
@@ -597,6 +595,16 @@ undefine_key(content_buffer_normal_keymap, "up", "cmd_scrollLineUp");
 undefine_key(content_buffer_normal_keymap, "down", "cmd_scrollLineDown");
 undefine_key(content_buffer_normal_keymap, "left", "cmd_scrollLeft");
 undefine_key(content_buffer_normal_keymap, "right", "cmd_scrollRight");
+#+END_SRC
+** Buffer Tab Navigation
+Make "l" open link in buffer background, and "M-f" and "M-b" are next
+and previous buffer respectively.
+#+BEGIN_SRC js2
+//define_key(content_buffer_normal_keymap, "C-u f", "follow-new-buffer-background");
+undefine_key(content_buffer_normal_keymap, "l", "back");
+define_key(content_buffer_normal_keymap, "l", "follow-new-buffer-background");
+define_key(content_buffer_normal_keymap, "M-f", "buffer-next");
+define_key(content_buffer_normal_keymap, "M-b", "buffer-previous");
 #+END_SRC
 ** Bind 1-0 Number Keys to Switch to Buffers 1-10
 #+BEGIN_SRC js2
