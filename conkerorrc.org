@@ -363,6 +363,15 @@ require("gmail");
 require("feedly");
 require("twitter");
 #+END_SRC
+** Sqlite Manager
+Needs the *sqlitemanager xpi* installed
+#+BEGIN_SRC js2
+interactive("sqlite-manager",
+            "Open SQLite Manager window.",
+            function (I) {
+                make_chrome_window('chrome://SQLiteManager/content/sqlitemanager.xul');
+            });
+#+END_SRC
 * BUSY Webjumps
   * NEED TO TEST MODE ACTIVATION *
 [[http://conkeror.org/Webjumps][See Conkeror Webjumps List]]

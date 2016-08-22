@@ -264,6 +264,12 @@ require("gmail");
 require("feedly");
 require("twitter");
 
+interactive("sqlite-manager",
+            "Open SQLite Manager window.",
+            function (I) {
+                make_chrome_window('chrome://SQLiteManager/content/sqlitemanager.xul');
+            });
+
 url_completion_use_history = false;
 url_completion_use_bookmarks = true;
 url_completion_use_webjumps = true;
