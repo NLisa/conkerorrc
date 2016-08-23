@@ -53,7 +53,7 @@ add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
 
 require("favicon.js");
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
-read_buffer_show_icons = true;
+//read_buffer_show_icons = true;
 
 hints_display_url_panel = true;
 hints_minibuffer_annotation_mode(true);

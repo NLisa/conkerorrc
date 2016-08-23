@@ -103,7 +103,7 @@ favicons anywhere
 #+BEGIN_SRC js2
 require("favicon.js");
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
-read_buffer_show_icons = true;
+//read_buffer_show_icons = true;
 #+END_SRC
 *** Hinting
 Hinting number associated with follow command. Number 0 refers to
@@ -770,7 +770,7 @@ user_agent_policy.define_policy("firefoxcompatmode",
                                 "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
                                "de.eurosport.yahoo.com")
 #+END_SRC
-*** User Agent Switcher                 :emacs:conkeror:user-agent:
+*** User Agent Switcher
 #+BEGIN_SRC js2
 /*var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                     "Gecko/20100101 conkeror/1.0pre",
