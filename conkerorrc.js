@@ -39,9 +39,6 @@ session_pref('browser.history_expire_days', 60);
 
 require("mode-line.js");
 
-require("mode-line-buttons.js");
-mode_line_add_buttons(standard_mode_line_buttons, true);
-
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
 
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
@@ -53,7 +50,7 @@ add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
 
 require("favicon.js");
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
-//read_buffer_show_icons = true;
+read_buffer_show_icons = true;
 
 hints_display_url_panel = true;
 hints_minibuffer_annotation_mode(true);
