@@ -2,6 +2,10 @@
 [[https://github.com/sleepomeno/conkerorrc/blob/master/conkerorrc.org][sleepomeno's conkerorrc.org]]
 [[https://github.com/ivoarch/.dot-org-files/blob/master/conkeror.org][ivoarch's conkerorr.org]]
 [[http://puntoblogspot.blogspot.com.es/2013/08/conkeror-go-to-buffer.html][Goto Tab]]
+[[http://babbagefiles.blgspot.com/2011/01/conkeror-browsing-web-emacs-style.html][Babbage Files Conkeror Jan 2011 Blog]]
+[[http://emacs-fu.blogspot.co.za/2010/12/conkeror-web-browsing-emacs-way.html][Emacs-Fu Dec 2010 Conkeror Blog]]
+[[http://conkeror.org/FrontPage][Programming Conkeror ConkerorWiki]]
+[[http://conkeror.org/Tips][Conkeror Tips]]
 * Org Tangle javascript file
 [[http://emacs.stackexchange.com/questions/13191/emacs-org-babel-how-to-specify-global-tangle-file-for-source-code-export][Stack Exchange Org Tangle Source Question]]
 Using Emacs org-mode babel to tangle the source blocks and create a
@@ -81,6 +85,9 @@ Disable clock widget, and enable all others
 #+BEGIN_SRC js2
 require("mode-line.js");
 
+require("mode-line-buttons.js");
+mode_line_add_buttons(standard_mode_line_buttons, true);
+
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
 
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
@@ -116,7 +123,7 @@ hints_display_url_panel = true;
 hints_minibuffer_annotation_mode(true);
 //hint_digits="asdfghjkl";
 #+END_SRC
-*** TODO [#C] Nyan Cat in Modeline                  :emacs:conkeror:nyan:cat:
+*** TODO Nyan Cat in Modeline
 ** Default Zoom Level
 #+BEGIN_SRC js2
 function my_zoom_set (buffer) {
@@ -293,7 +300,7 @@ interactive("org-capture-monopoly", "Monopolize the 1%",
             });
 
 #+END_SRC
-** Automatically Associate Files Types
+** BUSY Automatically Associate Files Types
 *** Pdf Files
 #+BEGIN_SRC js2
 content_handlers.set("application/pdf", content_handler_open_default_viewer);
@@ -763,7 +770,7 @@ user_agent_policy.define_policy("firefoxcompatmode",
                                 "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0 conkeror/1.0pre1",
                                "de.eurosport.yahoo.com")
 #+END_SRC
-*** [#C] User Agent Switcher                 :emacs:conkeror:user-agent:
+*** User Agent Switcher                 :emacs:conkeror:user-agent:
 #+BEGIN_SRC js2
 /*var user_agents = { "conkeror": "Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) " +
                     "Gecko/20100101 conkeror/1.0pre",
@@ -859,7 +866,9 @@ create_selection_search("amazon", "a");
 create_selection_search("youtube", "y");
 #+END_SRC
 * Completion of Configuration test
-Do we make it to the end
+Comand Line Verification that configuration loaded successfully.
+
+Do we make it to the end?
 #+BEGIN_SRC js2
 dumpln("Conkerror.rc Parsed Successfully...");
 #+END_SRC

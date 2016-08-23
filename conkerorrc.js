@@ -39,6 +39,9 @@ session_pref('browser.history_expire_days', 60);
 
 require("mode-line.js");
 
+require("mode-line-buttons.js");
+mode_line_add_buttons(standard_mode_line_buttons, true);
+
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
 
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
