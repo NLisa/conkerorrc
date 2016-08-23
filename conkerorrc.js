@@ -37,6 +37,24 @@ session_pref('browser.history_expire_days', 60);
 // This is the default anyway
 //session_pref("signon.rememberSignons", false);
 
+require("block-content-focus-change.js");
+function focusblock (buffer) {
+    var s = Components.utils.Sandbox(buffer.top_frame);
+    s.document = buffer.document.wrappedJSObject;
+    Components.utils.evalInSandbox(
+        "(function () {\
+            function nothing () {}\
+            if (! document.forms)\
+                return;\
+            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
+              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
+                document.forms[i].elements[j].focus = nothing;\
+            }\
+          })();",
+        s);
+}
+add_hook('content_buffer_progress_change_hook', focusblock);
+
 require("mode-line.js");
 
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
@@ -152,62 +170,62 @@ function org_capture_monopoly (url, title, selection, window) {
 }
 interactive("org-capture", "Clip URL, title and selection to capture via org-protocol",
             function (I) {
-                org_capture(encodeURIComponent(I.buffer.display_url_string),
+                org_capture(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-store-link", "Stores [[url][title]] as org link and copies url to emacs kill ring",
             function (I) {
-                org_store_link(encodeURIComponent(I.buffer.display_url_string),
+                org_store_link(encodeURIComponent(I.buffer.display_uri_string),
                                encodeURIComponent(I.buffer.document.title),
                                I.window);
             });
 interactive("org-capture-journal", "Journal",
             function (I) {
-                org_capture_journal(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_journal(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-kaizen", "Kaizen - Self Enlightenment",
             function (I) {
-                org_capture_kaizen(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_kaizen(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-emacs", "Emacs",
             function (I) {
-                org_capture_emacs(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_emacs(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-devenv", "Development Environment",
             function (I) {
-                org_capture_devenv(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_devenv(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-code", "Programming and Code",
             function (I) {
-                org_capture_code(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_code(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-course", "Chow Course",
             function (I) {
-                org_capture_course(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_course(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
 interactive("org-capture-monopoly", "Monopolize the 1%",
             function (I) {
-                org_capture_monopoly(encodeURIComponent(I.buffer.display_url_string),
+                org_capture_monopoly(encodeURIComponent(I.buffer.display_uri_string),
                                  encodeURIComponent(I.buffer.document.title),
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
