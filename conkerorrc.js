@@ -1,3 +1,5 @@
+require("xkcd");
+xkcd_add_title = true;
 
 dumpln("hello, world!");
 
@@ -37,8 +39,6 @@ session_pref('browser.history_expire_days', 60);
 // This is the default anyway
 //session_pref("signon.rememberSignons", false);
 
-require("block-content-focus-change.js");
-
 require("mode-line.js");
 
 remove_hook("mode_line_hook", mode_line_adder(clock_widget));
@@ -70,6 +70,28 @@ cwd.append("Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 
 remove_hook("download_added_hook", open_download_buffer_automatically);
+
+interactive(
+    "ekr_cmd_copy",
+    "Copy the selection to the clipboard and the Emacs kill ring",
+    function (I) {
+        call_interactively(I, "cmd_copy")
+        var cc = read_from_x_primary_selection();
+        cc = cc.replace(/([^\\]*)\\([^\\]*)/g, "$1\\\\$2");
+        cc = cc.replace('"', '\\"', "g");
+        cc = cc.replace("'", "'\\''", "g");
+        var ecc = "emacsclient -e '(kill-new \"" + cc + "\")' > /dev/null";
+        shell_command_blind(ecc);
+    }
+);
+undefine_key(caret_keymap,"M-w");
+define_key(caret_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(content_buffer_normal_keymap,"M-w");
+define_key(content_buffer_normal_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(special_buffer_keymap,"M-w");
+define_key(special_buffer_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(text_keymap,"M-w");
+define_key(text_keymap,"M-w", "ekr_cmd_copy");
 
 // editor_shell_command = "emacsclient -c -a emacs";
 editor_shell_command = "emacsclient -c -a \"\"";
@@ -611,6 +633,3 @@ create_selection_search("amazon", "a");
 create_selection_search("youtube", "y");
 
 dumpln("Conkerror.rc Parsed Successfully...");
-
-require("xkcd");
-xkcd_add_title = true;

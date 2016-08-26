@@ -80,10 +80,6 @@ Use keypass instead
 //session_pref("signon.rememberSignons", false);
 #+END_SRC
 ** BUSY Modeline
-** Block Content Focus Change
-#+BEGIN_SRC js2
-require("block-content-focus-change.js");
-#+END_SRC
 *** Widgets
 Disable clock widget, and enable all others
 #+BEGIN_SRC js2
@@ -150,10 +146,36 @@ the following
 #+BEGIN_SRC js2
 remove_hook("download_added_hook", open_download_buffer_automatically);
 #+END_SRC
-** External Emacsclient Editor and Org-Mode Integration
+** External Emacsclient Editor
+*** Copy Selection to Emacs Kill-Ring
+[[http://conkeror.org/Tips#Copy_Selection_to_Emacs_kill_ring][Tips - Conkeror.org]]
+#+BEGIN_SRC js2
+interactive(
+    "ekr_cmd_copy",
+    "Copy the selection to the clipboard and the Emacs kill ring",
+    function (I) {
+        call_interactively(I, "cmd_copy")
+        var cc = read_from_x_primary_selection();
+        cc = cc.replace(/([^\\]*)\\([^\\]*)/g, "$1\\\\$2");
+        cc = cc.replace('"', '\\"', "g");
+        cc = cc.replace("'", "'\\''", "g");
+        var ecc = "emacsclient -e '(kill-new \"" + cc + "\")' > /dev/null";
+        shell_command_blind(ecc);
+    }
+);
+undefine_key(caret_keymap,"M-w");
+define_key(caret_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(content_buffer_normal_keymap,"M-w");
+define_key(content_buffer_normal_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(special_buffer_keymap,"M-w");
+define_key(special_buffer_keymap,"M-w", "ekr_cmd_copy");
+undefine_key(text_keymap,"M-w");
+define_key(text_keymap,"M-w", "ekr_cmd_copy");
+#+END_SRC
+*** Org-Mode Integration
 orgmode.org org-protocol, emacs-fu,
 puntoblogspot(well-after-month-of-no-activity-in-this) oremacs my
-org-protocol babbagefiles conkeror
+
 Connect to the existing Emacs session when view source code
 #+BEGIN_SRC js2
 // editor_shell_command = "emacsclient -c -a emacs";
@@ -299,7 +321,6 @@ interactive("org-capture-monopoly", "Monopolize the 1%",
                                  encodeURIComponent(I.buffer.top_frame.getSelection()),
                                  I.window);
             });
-
 #+END_SRC
 ** BUSY Automatically Associate Files Types
 *** Pdf Files
