@@ -578,7 +578,7 @@ define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternati
 ** Torrents, Usenet, Streams and Direct
 *** 1337x.to
 #+BEGIN_SRC js2
-define_webjump("1337x", "http://www.1377x.to/srch?search=%s");
+define_webjump("1337x", "https://www.1337x.to/srch?search=%s");
 #+END_SRC
 ** Wikipedia
 #+BEGIN_SRC js2
