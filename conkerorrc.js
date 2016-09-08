@@ -4,7 +4,7 @@ xkcd_add_title = true;
 dumpln("hello, world!");
 
 // Kenrtron
-// proxy_server_default = "proxy.kentron.co.za";
+// proxy_server_default = "proxy.name.com";
 // proxy_port_default = 80;
 
 user_pref("javascript.options.showInConsole", false);
@@ -66,7 +66,6 @@ add_hook('create_buffer_late_hook', my_zoom_set);
 
 cwd = get_home_directory();
 cwd.append("Downloads");
-//cwd = make_file("/home/nuk3/Downloads");
 download_buffer_automatic_open_target=OPEN_NEW_BUFFER_BACKGROUND;
 
 remove_hook("download_added_hook", open_download_buffer_automatically);
@@ -334,6 +333,9 @@ define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer"
 define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
 
 read_url_handler_list = [read_url_make_default_webjump_handler("duckduckgo")];
+
+define_webjump("mikrotik", "http://192.168.88.1");
+define_webjump("netgear", "http://192.168.88.2");
 
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
