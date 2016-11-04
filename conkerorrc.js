@@ -3,7 +3,6 @@ xkcd_add_title = true;
 
 dumpln("hello, world!");
 
-// Kenrtron
 // proxy_server_default = "proxy.name.com";
 // proxy_port_default = 80;
 
@@ -339,15 +338,34 @@ define_webjump("netgear", "http://192.168.88.2");
 
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
+// define_webjump("gwene", "http://gwene.org/",
+//                $post_data = [['name', 'url'], ['value', '%s']],
+//                $alternative = "http://gwene.org");
+define_webjump("gwene",
+    function (term) {
+        return load_spec(
+            { uri: "http://gwene.org/",
+              post_data: make_post_data([['url', term]]) });
+    },
+    $alternative = "http://gwene.org");
 define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
 define_webjump("slashdot", "http://slashdot.org/search.pl?query=%s");
 define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
 define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
 define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+// free eBooks
+define_webjump("gutenberg",
+    function (term) {
+        return load_spec(
+            { uri: "http://www.gutenberg.org/ebooks/search/",
+              post_data: make_post_data([['query', term]]) });
+    },
+    $alternative = "http://www.gutenberg.org/");
 
 define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
+define_webjump("reddit/subreddit", "http://www.reddit.com/r/%s");
 
-define_webjump("stackexchange/linux", "http://unix-stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
+define_webjump("stackexchange/linux", "http://unix.stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
 
 define_webjump("arch/forums", "http://bbs.archlinux.org");
 define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");

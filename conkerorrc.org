@@ -1,11 +1,11 @@
 * Credits
-[[https://github.com/sleepomeno/conkerorrc/blob/master/conkerorrc.org][sleepomeno's conkerorrc.org]]
-[[https://github.com/ivoarch/.dot-org-files/blob/master/conkeror.org][ivoarch's conkerorr.org]]
-[[http://puntoblogspot.blogspot.com.es/2013/08/conkeror-go-to-buffer.html][Goto Tab]]
-[[http://babbagefiles.blgspot.com/2011/01/conkeror-browsing-web-emacs-style.html][Babbage Files Conkeror Jan 2011 Blog]]
-[[http://emacs-fu.blogspot.co.za/2010/12/conkeror-web-browsing-emacs-way.html][Emacs-Fu Dec 2010 Conkeror Blog]]
-[[http://conkeror.org/FrontPage][Programming Conkeror ConkerorWiki]]
-[[http://conkeror.org/Tips][Conkeror Tips]]
+  - [[https://github.com/sleepomeno/conkerorrc/blob/master/conkerorrc.org][sleepomeno's conkerorrc.org]]
+  - [[https://github.com/ivoarch/.dot-org-files/blob/master/conkeror.org][ivoarch's conkerorr.org]]
+  - [[http://puntoblogspot.blogspot.com.es/2013/08/conkeror-go-to-buffer.html][Puntoblogspot Goto]]
+  - [[http://babbagefiles.blgspot.com/2011/01/conkeror-browsing-web-emacs-style.html][Babbage Files Conkeror Jan 2011 Blog]]
+  - [[http://emacs-fu.blogspot.co.za/2010/12/conkeror-web-browsing-emacs-way.html][Emacs-Fu Dec 2010 Conkeror Blog]]
+  - [[http://conkeror.org/FrontPage][Programming Conkeror ConkerorWiki]]
+  - [[http://conkeror.org/Tips][Conkeror Tips]]
 * Org Tangle javascript file
 [[http://emacs.stackexchange.com/questions/13191/emacs-org-babel-how-to-specify-global-tangle-file-for-source-code-export][Stack Exchange Org Tangle Source Question]]
 Using Emacs org-mode babel to tangle the source blocks and create a
@@ -24,9 +24,8 @@ dumpln("hello, world!");
 #+END_SRC
 * Temporary Proxy
 Will need to have this automated eventually, or rather must finalize
-Raspberry Pi Remote Proxy Ham
+Raspberry Pi Remote Proxy Ham, or use [[file:/etc/proxy.pac][Proxy PAC File]]
 #+BEGIN_SRC js2
-// Kenrtron
 // proxy_server_default = "proxy.name.com";
 // proxy_port_default = 80;
 #+END_SRC
@@ -474,12 +473,31 @@ ServerFault, SuperUser, etc
 #+BEGIN_SRC js2
 define_webjump("linux-questions","http://www.linuxquestions.org/questions/");
 define_webjump("gmane", "http://gmane.org/find.php?list=%s");
+// define_webjump("gwene", "http://gwene.org/",
+//                $post_data = [['name', 'url'], ['value', '%s']],
+//                $alternative = "http://gwene.org");
+define_webjump("gwene",
+    function (term) {
+        return load_spec(
+            { uri: "http://gwene.org/",
+              post_data: make_post_data([['url', term]]) });
+    },
+    $alternative = "http://gwene.org");
 define_webjump("hackernews", "http://searchyc.com/%s", $alternative = "http://news.ycombinator.com/");
 define_webjump("slashdot", "http://slashdot.org/search.pl?query=%s");
 define_webjump("stackexchange", "http://stackexchange.com/search?q=%s", $alternative = "http://stackexchange.com/");
 define_webjump("stackoverflow", "http://stackoverflow.com/search?q=%s", $alternative = "http://stackoverflow.com/");
 define_webjump("superuser", "http://superuser.com/search?q=%s", $alternative = "http://superuser.com/");
+// free eBooks
+define_webjump("gutenberg",
+    function (term) {
+        return load_spec(
+            { uri: "http://www.gutenberg.org/ebooks/search/",
+              post_data: make_post_data([['query', term]]) });
+    },
+    $alternative = "http://www.gutenberg.org/");
 #+END_SRC
+
 *** Reddit
 See reddit mode
 Provides reddit mode cursor
@@ -494,10 +512,11 @@ Provides reddit mode cursor
 | .       | reddit-vote-down           |                                             |
 #+BEGIN_SRC js2
 define_webjump("reddit", "http://www.reddit.com/search?q=%s", $alternative = "http://www.reddit.com/");
+define_webjump("reddit/subreddit", "http://www.reddit.com/r/%s");
 #+END_SRC
 ** Unix / Linux
 #+BEGIN_SRC js2
-define_webjump("stackexchange/linux", "http://unix-stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
+define_webjump("stackexchange/linux", "http://unix.stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
 #+END_SRC
 *** Arch Linux
 #+BEGIN_SRC js2
