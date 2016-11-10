@@ -427,6 +427,8 @@ define_webjump("fnb", "https://www.fnb.co.za");
 
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
+define_webjump("pricecheck", "https://www.pricecheck.co.za/search?search=%s", $alternative = "https:/www.pricecheck.co.za/");
+
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 
 define_webjump("wordpress", "http://wordpress.org/search/%s");

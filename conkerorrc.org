@@ -619,6 +619,10 @@ define_webjump("fnb", "https://www.fnb.co.za");
 #+BEGIN_SRC js2
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 #+END_SRC
+*** PriceCheck
+#+BEGIN_SRC js2
+define_webjump("pricecheck", "https://www.pricecheck.co.za/search?search=%s", $alternative = "https:/www.pricecheck.co.za/");
+#+END_SRC
 ** Entertainment & Blogs
 *** xkcd
 #+BEGIN_SRC js
