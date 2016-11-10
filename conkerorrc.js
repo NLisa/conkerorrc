@@ -428,6 +428,9 @@ define_webjump("fnb", "https://www.fnb.co.za");
 define_webjump("amazon", "https://www.amazon.com/s/?url=search-alias%3Daps&field-keywords=%s", $alternative = "https://www.amazon.com/");
 
 define_webjump("pricecheck", "https://www.pricecheck.co.za/search?search=%s", $alternative = "https:/www.pricecheck.co.za/");
+define_webjump("takealot/deals", "http://www.takealot.com/deals", $alternative = "https:/www.takealot.com/");
+define_webjump("takealot", "http://www.takealot.com/all/?qsearch=%s&_sb=1&_dt=all&_r=1", $alternative = "https:/www.takealot.com/");
+define_webjump("ebucks", "https://www.ebucks.com/web/shop/categorySelected.do?catId=291707128", $alternative = "https://www.ebucks.com/web/shop/shopHome.do")
 
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 
