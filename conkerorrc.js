@@ -403,7 +403,7 @@ define_webjump("cpan", "http://search.cpan.org/search?query=%s&mode=all");
 define_webjump("metacpan", "https://metacpan.org/search?q=%s");
 
 define_webjump("python", "http://docs.python.org/search.html?q=%s");
-define_webjump("python3", "http://docs.python.org/py3k/search.html?q=%s");
+define_webjump("python3", "http://docs.python.org/3/search.html?q=%s", $alternative = "http://docs.python.org/3/search.html");
 
 define_webjump("ctan/desc", "http://www.ctan.org/search/?search=%s&search_type=description");
 define_webjump("ctan/file", "http://www.ctan.org/search/?search=%s&search_type=filename");
@@ -413,8 +413,17 @@ define_webjump("stackexchange/tex", "http://tex.stackexchange.com/search?q=%s", 
 
 //require("google-maps");
 //require("page-modes/google-maps.js");
-define_webjump("google/za", "http://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="http://www.google.co.za/");
-define_webjump("image", "http://www.google.com/images?q=%s&safe=off", $alternative = "http://www.google.com/imghp?as_q=&safe=off");
+define_webjump("google/za", "https://www.google.co.za/webhp?#q=%s&tbs=ctr:countryZA&cr=countryZA", $alternative="https://www.google.co.za/");
+define_webjump("google/image", "https://www.google.com/images?q=%s&safe=off", $alternative = "https://www.google.com/imghp?as_q=&safe=off");
+define_webjump("google/translate", "https://translate.google.com/translate_t#auto|en|%s");
+define_webjump("google/scholar", "https://scholar.google.com/scholar?q=%s", $alternative = "https://scholar.google.com");
+define_webjump("google/maps", "https://www.google.com/maps/place/%s", $alternative = "https://maps.google.com")
+
+define_webjump("urban", "http://www.urbandictionary.com/define.php?term=%s");
+
+define_webjump("webofscience", "http://apps.webofknowledge.com/");
+
+define_webjump("scopus", "https://www.scopus.com/");
 
 define_webjump("1337x", "https://www.1337x.to/srch?search=%s");
 
@@ -431,6 +440,19 @@ define_webjump("pricecheck", "https://www.pricecheck.co.za/search?search=%s", $a
 define_webjump("takealot/deals", "http://www.takealot.com/deals", $alternative = "https:/www.takealot.com/");
 define_webjump("takealot", "http://www.takealot.com/all/?qsearch=%s&_sb=1&_dt=all&_r=1", $alternative = "https:/www.takealot.com/");
 define_webjump("ebucks", "https://www.ebucks.com/web/shop/categorySelected.do?catId=291707128", $alternative = "https://www.ebucks.com/web/shop/shopHome.do")
+
+define_webjump("htxt", "http://www.htxt.co.za/");
+
+lastfm_user = "your username here";
+define_webjump("lastfm", "http://www.last.fm/user/" + lastfm_user);
+define_webjump("lastfm-music", "http://www.last.fm/search?m=all&q=%s");
+define_webjump("lastfm-event", "http://www.last.fm/events/search?search=1&q=%s");
+define_webjump("lastfm-tag", "http://www.last.fm/search?m=tag&q=%s");
+define_webjump("lastfm-user", "http://www.last.fm/users?m=search&type=un&q=%s");
+define_webjump("lastfm-group", "http://www.last.fm/users/groups?s_bio=%s");
+define_webjump("lastfm-label", "http://www.last.fm/search?m=label&q=%s");
+
+define_webjump("rottentomatoes", "http://www.rottentomatoes.com/search/?search=%s");
 
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search=Search");
 
