@@ -17,14 +17,13 @@ line with #+PROPERTY: tangle key-word to refresh local setup.
 
 Finally tangle the entire file with C-c C-v t
 
-#+PROPERTY: tangle "~/.conkerorrc/conkerorrc.js"
+#+PROPERTY: header-args+ :tangle "~/.conkerorrc/conkerorrc.js"
 Default debugging test to ensure everything
-#+BEGIN_SRC js2
+#+BEGIN_SRC js2 :tangle yes
 dumpln("hello, world!");
 #+END_SRC
 * Temporary Proxy
 Will need to have this automated eventually, or rather must finalize
-Raspberry Pi Remote Proxy Ham, or use [[file:/etc/proxy.pac][Proxy PAC File]]
 #+BEGIN_SRC js2
 // proxy_server_default = "proxy.name.com";
 // proxy_port_default = 80;
@@ -67,6 +66,7 @@ url_remoting_fn = load_url_in_new_buffer;
 #+END_SRC
 ** Session and History Settings
 Enable auto save session and make it load automatically on startup.
+h
 #+BEGIN_SRC js2
 require("session.js");
 session_auto_save_auto_load = true;
@@ -91,7 +91,7 @@ add_hook("mode_line_hook", mode_line_adder(current_buffer_name_widget), true);
 add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(zoom_widget));
-add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
+//add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
 #+END_SRC
 *** Favicon
 Activate the favicon widget within the modeline, for displaying
@@ -520,9 +520,17 @@ define_webjump("stackexchange/linux", "http://unix.stackexchange.com/search?q=%s
 #+END_SRC
 *** Arch Linux
 #+BEGIN_SRC js2
-define_webjump("arch/forums", "http://bbs.archlinux.org");
-define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
-define_webjump("arch/aur", "http://aur.archlinux.org/packages.php?O=0&K=%s");
+define_webjump("arch/forums",
+    function (term) {
+        return load_spec(
+            { uri: "https://bbs.archlinux.org/search.php",
+              post_data: make_post_data([['keywords', term]]) });
+    },
+    $alternative="https://bbs.archlinux.org");
+define_webjump("arch/wiki", "https://wiki.archlinux.org/index.php?search=%s",
+               $alternative="https://wiki.archlinux.org/");
+define_webjump("arch/aur", "https://aur.archlinux.org/packages.php?O=0&K=%s",
+               $alternative="https://aur.archlinux.org/packages");
 define_webjump("arch/packages",
                "https://www.archlinux.org/packages/?sort=&q=%s&limit=50",
                $alternative="https://packages.archlinux.org");

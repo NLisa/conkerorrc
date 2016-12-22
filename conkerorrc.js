@@ -1,8 +1,6 @@
 require("xkcd");
 xkcd_add_title = true;
 
-dumpln("hello, world!");
-
 // proxy_server_default = "proxy.name.com";
 // proxy_port_default = 80;
 
@@ -47,7 +45,7 @@ add_hook("mode_line_hook", mode_line_adder(current_buffer_name_widget), true);
 add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
 add_hook("mode_line_hook", mode_line_adder(zoom_widget));
-add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
+//add_hook("mode_line_hook", mode_line_adder(downloads_status_widget));
 
 require("favicon.js");
 add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
@@ -367,9 +365,17 @@ define_webjump("reddit/subreddit", "http://www.reddit.com/r/%s");
 
 define_webjump("stackexchange/linux", "http://unix.stackexchange.com/search?q=%s", $alternative="http://unix.stackexchange.com");
 
-define_webjump("arch/forums", "http://bbs.archlinux.org");
-define_webjump("arch/wiki", "http://wiki.archlinux.org/index.php?search=%s");
-define_webjump("arch/aur", "http://aur.archlinux.org/packages.php?O=0&K=%s");
+define_webjump("arch/forums",
+    function (term) {
+        return load_spec(
+            { uri: "https://bbs.archlinux.org/search.php",
+              post_data: make_post_data([['keywords', term]]) });
+    },
+    $alternative="https://bbs.archlinux.org");
+define_webjump("arch/wiki", "https://wiki.archlinux.org/index.php?search=%s",
+               $alternative="https://wiki.archlinux.org/");
+define_webjump("arch/aur", "https://aur.archlinux.org/packages.php?O=0&K=%s",
+               $alternative="https://aur.archlinux.org/packages");
 define_webjump("arch/packages",
                "https://www.archlinux.org/packages/?sort=&q=%s&limit=50",
                $alternative="https://packages.archlinux.org");
